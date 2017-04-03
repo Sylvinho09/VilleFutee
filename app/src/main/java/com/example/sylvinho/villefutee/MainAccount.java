@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 public class MainAccount extends AppCompatActivity {
     private String[] mesItems;
+    private String[] mesCommerces;
     private ListView reseauList;
     private ListView reseauListRight;
     @Override
@@ -29,10 +30,11 @@ public class MainAccount extends AppCompatActivity {
         //ImageButton navLauncher = (ImageButton) findViewById(R.id.imageButton3);
         // Button buttonright = (Button) findViewById(R.id.buttonnav);
         mesItems = getResources().getStringArray(R.array.items);
+        mesCommerces = getResources().getStringArray(R.array.commerces);
         reseauList = (ListView) findViewById(R.id.left_drawer);
         reseauList.setAdapter(new ArrayAdapter<String>(this, R.layout.navline, mesItems));
         reseauListRight = (ListView) findViewById(R.id.left_drawer2);
-        reseauListRight.setAdapter(new ArrayAdapter<String>(this, R.layout.navline, mesItems));
+        reseauListRight.setAdapter(new ArrayAdapter<String>(this, R.layout.navline, mesCommerces));
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE); // the results will be higher than using the activity context object or the getWindowManager() shortcut

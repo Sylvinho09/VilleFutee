@@ -5,7 +5,9 @@
     android:id="@android:id/text1"
     android:textColor="#fff"
     android:textSize="20sp"
+    android:textStyle="bold"
     android:gravity="center"
-    android:minHeight="40sp">
+    android:minHeight="60sp"
+    android:background="@drawable/border">
 
 </TextView>

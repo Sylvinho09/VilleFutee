@@ -51,6 +51,7 @@
              android:layout_alignParentBottom="true"
              android:layout_alignParentLeft="true"
              android:layout_alignParentStart="true" />
+
          <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
 
 

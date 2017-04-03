@@ -1,10 +1,15 @@
 <resources>
-    <string name="app_name">VilleFutee</string>
-    <string name="test"> Unchanged</string>
+    <string name="app_name">Ville futée</string>
     <string-array name="items">
         <item>Créer mon réseau</item>
         <item>Mes réseaux</item>
         <item>Rejoindre un réseau</item>
-        <item></item>
+    </string-array>
+
+    <string-array name="commerces">
+        <item>Mes commerces</item>
+        <item>Les commerces à proximité</item>
+        <item>Ajouter un commerce</item>
+        <item>Notifications</item>
     </string-array>
 </resources>
