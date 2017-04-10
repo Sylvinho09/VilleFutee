@@ -12,4 +12,17 @@
         <item>Ajouter un commerce</item>
         <item>Notifications</item>
     </string-array>
+
+    <string-array name="produits">
+        <item> Patates</item>
+        <item> Courgettes</item>
+        <item> Kinder Bueno</item>
+        <item> Pâtes</item>
+        <item> Jambon</item>
+        <item> Steaks hachés</item>
+        <item> Riz</item>
+        <item> Gateaux</item>
+        <item> Céréales</item>
+        <item> Lait </item>
+    </string-array>
 </resources>

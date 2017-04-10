@@ -1,5 +1,6 @@
 package com.example.sylvinho.villefutee;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,9 @@ public class MainAccount extends AppCompatActivity {
     private String[] mesCommerces;
     private ListView reseauList;
     private ListView reseauListRight;
+    /** liste des produits préférés (stockés dans un fichier qui doit être lu ou créé dans le onCreate **/
+    private String[] produitsPrefs;
+    static final int PRODUCT_CHOICE =1; /** identifiant de l'intent généré **/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,14 +71,7 @@ public class MainAccount extends AppCompatActivity {
         buttonright.setScaleX((float)1.1);
 
 
-
-
-
-
-
-
-
-
+       /** Onclick du bouton gauche **/
         //mDrawerLayout.closeDrawer(mDrawerLayout);
         buttonleft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +81,18 @@ public class MainAccount extends AppCompatActivity {
             }
         });
 
+        /** onClick du bouton du milieu**/
+
+        buttonmiddle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent productList = new Intent(MainAccount.this, ProductListActivity.class);
+                startActivityForResult(productList, PRODUCT_CHOICE);
+
+
+            }
+        });
+        /** Onclick du bouton droit **/
         buttonright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,5 +100,17 @@ public class MainAccount extends AppCompatActivity {
                 mDrawerLayout.openDrawer(fm2);
             }
         });
+    }
+
+    /** Fonctionnement : la nouvelle activité écrira dans le fichier "produitsPrefs" seulement quand le client
+     appuiera sur "Valider", retournant RESULT_HAS_CHANGED si au moins 1 produit a été retiré/ajouté et donc
+     on devra mettre à jour la liste des produits préférés du client. Sinon retourne RESULT_UNCHANGED et on ne fait rien. **/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == PRODUCT_CHOICE)
+        {
+        Toast.makeText(this, "dans le onActivityResult", Toast.LENGTH_LONG);
+        }
     }
 }
