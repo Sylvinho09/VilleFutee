@@ -33,7 +33,7 @@ public class ConnexionPage extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        System.out.println("Dans le main Thread "+result);
+        System.out.println("Dans le main Thread "+result); /** Résultat bien reçu ! **/
 
     }
 }

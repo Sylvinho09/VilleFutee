@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.CharBuffer;
 
 /**
  * Created by sylvinho on 12/04/2017.
@@ -26,7 +27,7 @@ public class GetMDPSocket extends AsyncTask<String, Void, String> {
         try {
             //System.out.println("ici : "+InetAddress.getLocalHost() + "ici "+InetAddress.getLocalHost().getHostAddress());
             System.out.println("valeur: "+params[0]);
-            socket = new Socket("170.20.10.4", 8050);
+            socket = new Socket("172.20.10.4", 8050);
             System.out.println("Demande de connexion");
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String message_distant = in.readLine();
@@ -34,19 +35,25 @@ public class GetMDPSocket extends AsyncTask<String, Void, String> {
 
             out = new PrintWriter(socket.getOutputStream());
 
-            out.println(params[0]); //contiendra normalement l'identifiant rentré par l'user
+            out.println("Sylvinho09 abcd"); //params[0] contiendra normalement l'identifiant rentré par l'user
 
             out.flush();
 
-            /**
-             * On va récupérer maintenant le mot de passe renvoyé par le serveur pour le passer au main thread
-             **/
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String message_distantMDP = in.readLine();
-            System.out.println(message_distant);
+
+            CharBuffer buffer= CharBuffer.allocate(3); // Yes or No -> taille max : 3
+
+            int message_length = in.read(buffer); //read(CharBuffer) est bloquant:pratique
+            buffer.position(0);
+            String result="";
+            for(int i=0; i<message_length; i++)
+            {
+                char c= buffer.get();
+                result+=c;
+            }
 
             socket.close();
-            return message_distant;
+            return result;
 
         } catch (UnknownHostException e) {
 
