@@ -97,7 +97,9 @@ public class Serveur {
 
             /** On renvoie maintenant si le MDP est correct ou non  **/
             out = new PrintWriter(socketduserveur.getOutputStream());
-            out.println("No"); // Yes or no
+            if(id.trim().equals("Sylvinho09") && mdp.trim().equals("blabla"))
+                out.println("Yes");
+            else out.println("No"); // Yes or no
             out.flush();
             System.out.println("3rd step");
 
