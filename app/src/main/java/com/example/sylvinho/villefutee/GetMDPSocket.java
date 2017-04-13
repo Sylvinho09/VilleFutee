@@ -34,12 +34,17 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, String> {
         try {
             //System.out.println("ici : "+InetAddress.getLocalHost() + "ici "+InetAddress.getLocalHost().getHostAddress());
             System.out.println("valeur: "+params[0]+ " "+params[0].mdp);
-            socket = new Socket("172.20.10.4", 8050);
+            Socket socket2;
+            socket2 = new Socket("172.20.10.4", 8050);
+            StaticSocket.setSocket(socket2);
+            socket = StaticSocket.getSocket();
+
+
             System.out.println("Demande de connexion");
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String message_distant = in.readLine();
             System.out.println(message_distant); //affiche "vous etes connecté";
-
+            System.out.println("type de socket: "+ socket.getClass()+ " "+ socket);
             out = new PrintWriter(socket.getOutputStream());
 
             out.println(params[0].id + " "+ params[0].mdp); //params[0] contiendra normalement l'identifiant rentré par l'user
