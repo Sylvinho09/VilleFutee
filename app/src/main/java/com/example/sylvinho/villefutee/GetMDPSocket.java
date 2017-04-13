@@ -15,18 +15,25 @@ import java.nio.CharBuffer;
  * Created by sylvinho on 12/04/2017.
  */
 
-public class GetMDPSocket extends AsyncTask<String, Void, String> {
+public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, String> {
+    String id;
+    String mdp;
 
+    GetMDPSocket()
+    {
+        this.id=id;
+        this.mdp=mdp;
+    }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected String doInBackground(IdMdpClass... params) {
         Socket socket;
         BufferedReader in;
         PrintWriter out;
 
         try {
             //System.out.println("ici : "+InetAddress.getLocalHost() + "ici "+InetAddress.getLocalHost().getHostAddress());
-            System.out.println("valeur: "+params[0]);
+            System.out.println("valeur: "+params[0]+ " "+params[0].mdp);
             socket = new Socket("172.20.10.4", 8050);
             System.out.println("Demande de connexion");
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -35,7 +42,7 @@ public class GetMDPSocket extends AsyncTask<String, Void, String> {
 
             out = new PrintWriter(socket.getOutputStream());
 
-            out.println("Sylvinho09 abcd"); //params[0] contiendra normalement l'identifiant rentré par l'user
+            out.println(params[0].id + " "+ params[0].mdp); //params[0] contiendra normalement l'identifiant rentré par l'user
 
             out.flush();
 
