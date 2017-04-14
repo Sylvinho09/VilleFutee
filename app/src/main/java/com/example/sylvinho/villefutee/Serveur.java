@@ -36,76 +36,90 @@ public class Serveur {
             System.out.println("Le serveur est à l'écoute du port " + socketserver.getLocalPort() + " à l'adresse IP "
                     + socketserver.getInetAddress().getHostAddress());
 
-			/*CharBuffer cbuf = CharBuffer.allocate(5);
-			System.out.println("taille : "+cbuf.length());//donne la taille restante !!
-
-
-
-			cbuf.put("allo");
-			cbuf.position(0);
-			String a = "";
-			for (int i = 0; i < cbuf.capacity(); i++) {
-
-				a += cbuf.get();
-				System.out.println("ici " + a);
-
-			}
-
-			System.out.println("affichage : " + a);*/
-
             socketduserveur = socketserver.accept();
 
             System.out.println("Un zéro s'est connecté");
 
-            /** On envoie la notif au client **/
-            out = new PrintWriter(socketduserveur.getOutputStream());
-            out.println("Vous êtes connecté zéro !");
-            out.flush();
-            System.out.println("1st step");
+            /** On va maintenant se mettre en réception pour savoir ce que veut le client **/
 
-            /**
-             * on va maintenant recevoir l'identifiant et renvoyer le mot de
-             * passe associé
-             **/
             in = new BufferedReader(new InputStreamReader(socketduserveur.getInputStream()));
+            CharBuffer recep = CharBuffer.allocate(6); /** Get, Create,idMdp --> taille max 6 **/
 
-            CharBuffer buffer= CharBuffer.allocate(100); // on fixe à 100 la taille de l'identifiant+mdp reçus
+            int message_length = in.read(recep);
+            recep.rewind();
 
+            //recep.position(0); //sinon la pos est la taille du message recu -1
+            String extract="";
+            extract=recep.toString();
 
-            int message_length = in.read(buffer); //read(CharBuffer) est bloquant:pratique
-            buffer.position(0); //sinon la position par défaut est celle du nombre de char -1 dans le buffer
-            //int x = Character.getNumericValue(buffer.get()); dans le cas où on doit recevoir un entier
-            //System.out.println("valeur obtenue dans le buffer : "+ x);
-            String id="";
-            String mdp="";
-            int chx =0;
-            for(int i=0; i<message_length; i++)
+			/*for(int i=0; i<message_length; i++)
+			{
+				extract += recep.get();
+			}*/
+
+            System.out.println("Message reçu du client : "+extract);
+
+            if(extract.trim().equals("idMdp"))
             {
-                char c= buffer.get();
-                if(c==' ')
-                {
-                    chx=1;
-                }
-                else if(chx==0) id+=c;
-                else mdp+=c;
+                System.out.println("dans le equals");
+                /**
+                 * on va maintenant recevoir l'identifiant et renvoyer le mot de
+                 * passe associé
+                 **/
+
+				/* IMPORTANT : ne pas redéclarer la ligne en dessous,
+				 * en effet, si le client envoie le 2 eme message avant que le serveur ne declare la ligne en dessous,
+				 * alors le buffer ci dessous sera vide et il y aura un blockage !"
+				 */
+                //in = new BufferedReader(new InputStreamReader(socketduserveur.getInputStream()));
+
+
+                CharBuffer buffer= CharBuffer.allocate(100); // on fixe à 100 la taille de l'identifiant+mdp reçus
+
+                System.out.println("ici avant");
+                int message_length_idMdp = in.read(buffer); //read(CharBuffer) est bloquant:pratique
+                System.out.println("ici apres");
+                buffer.rewind(); //sinon la position par défaut est celle du nombre de char -1 dans le buffer
+                //int x = Character.getNumericValue(buffer.get()); dans le cas où on doit recevoir un entier
+                //System.out.println("valeur obtenue dans le buffer : "+ x);
+                String id="";
+                String mdp="";
+                int chx =0;
+                String[] idmdp= buffer.toString().split("\\s");
+
+                System.out.println("affichage id et mdp: "+idmdp[0]+ " "+idmdp[1]);
+
+                id=idmdp[0];
+                mdp=idmdp[1];
+
+				/*for(int i=0; i<message_length_idMdp; i++)
+				{
+					char c= buffer.get();
+					if(c==' ')
+					{
+						chx=1;
+					}
+					else if(chx==0) id+=c;
+					else mdp+=c;
+				}*/
+                System.out.println(" Identifiant "+id+" Mdp "+mdp);
+
+                System.out.println("2nd step"); /** Fonctionne **/
+
+                /** on vérifie dans la bdd la correspondance identifiant-mdp **/
+
+                /** On renvoie maintenant si le MDP est correct ou non  **/
+                out = new PrintWriter(socketduserveur.getOutputStream());
+                if(id.trim().equals("Sylvinho09") && mdp.trim().equals("blabla"))
+                    out.println("Yes");
+                else out.println("No"); // Yes or no
+                out.flush();
+                System.out.println("3rd step");
+
+                socketduserveur.close();
+
+                socketserver.close();
             }
-            System.out.println(" Identifiant "+id+" Mdp "+mdp);
-
-            System.out.println("2nd step"); /** Fonctionne **/
-
-            /** on vérifie dans la bdd la correspondance identifiant-mdp **/
-
-            /** On renvoie maintenant si le MDP est correct ou non  **/
-            out = new PrintWriter(socketduserveur.getOutputStream());
-            if(id.trim().equals("Sylvinho09") && mdp.trim().equals("blabla"))
-                out.println("Yes");
-            else out.println("No"); // Yes or no
-            out.flush();
-            System.out.println("3rd step");
-
-            socketduserveur.close();
-
-            socketserver.close();
 
         } catch (IOException e) {
 
