@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -33,6 +34,15 @@ public class ConnexionPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connexion_page);
         Button valider = (Button) findViewById(R.id.button);
+
+        TextView inscription = (TextView) findViewById(R.id.textView3);
+        inscription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myintent = new Intent(getApplicationContext(), Inscription.class);
+                startActivity(myintent);
+            }
+        });
 
         valider.setOnClickListener(new View.OnClickListener() {
                                        @Override

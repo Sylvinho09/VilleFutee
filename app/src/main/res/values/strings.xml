@@ -25,4 +25,17 @@
         <item> Céréales</item>
         <item> Lait </item>
     </string-array>
+
+    <string-array name="spinner">
+        <item>Montpellier</item>
+        <item>Toulouse</item>
+        <item>Paris</item>
+        <item>Lyon</item>
+        <item>Saint-Etienne</item>
+        <item>Clermont-Ferrand</item>
+        <item>Strasbourg</item>
+        <item>Metz</item>
+        <item>Lille</item>
+        <item>Marseille</item>
+    </string-array>
 </resources>

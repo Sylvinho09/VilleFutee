@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:text="Bienvenue, veuillez fournir les éléments ci-dessous afin de pouvoir valider l'inscription. Merci de ne pas mettre d'espace."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView" />
+
+    <TextView
+        android:text="Prénom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="71dp"
+        android:id="@+id/textViewPrenom"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Identifiant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:id="@+id/textViewId"
+        android:layout_below="@+id/textViewVille"
+        android:layout_alignLeft="@+id/textViewVille"
+        android:layout_alignStart="@+id/textViewVille" />
+
+    <TextView
+        android:text="Nom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:id="@+id/textViewNom"
+        android:layout_below="@+id/textViewPrenom"
+        android:layout_alignLeft="@+id/textViewPrenom"
+        android:layout_alignStart="@+id/textViewPrenom" />
+
+    <TextView
+        android:text="Mot de passe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:id="@+id/textViewMdp"
+        android:layout_below="@+id/textViewId"
+        android:layout_alignLeft="@+id/textViewId"
+        android:layout_alignStart="@+id/textViewId" />
+
+    <TextView
+        android:text="Ville"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:id="@+id/textViewVille"
+        android:layout_below="@+id/textViewAge"
+        android:layout_alignLeft="@+id/textViewAge"
+        android:layout_alignStart="@+id/textViewAge" />
+
+    <TextView
+        android:text="Age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:id="@+id/textViewAge"
+        android:layout_below="@+id/textViewNom"
+        android:layout_alignLeft="@+id/textViewNom"
+        android:layout_alignStart="@+id/textViewNom" />
+
+    <!--<EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Ville"
+        android:ems="10"
+        android:id="@+id/editText7"
+        android:layout_alignBottom="@+id/textViewVille"
+        android:layout_alignLeft="@+id/editText6"
+        android:layout_alignStart="@+id/editText6" />-->
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/spinner"
+        android:layout_alignBottom="@+id/textViewVille"
+        android:layout_alignLeft="@+id/editTextAge"
+        android:layout_alignStart="@+id/editTextAge"
+        android:layout_below="@+id/editTextAge"></Spinner>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="MDP"
+        android:ems="10"
+        android:id="@+id/editTextMdp"
+        android:layout_alignBaseline="@+id/textViewMdp"
+        android:layout_alignBottom="@+id/textViewMdp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Identifiant"
+        android:ems="10"
+        android:id="@+id/editTextId"
+        android:layout_alignBaseline="@+id/textViewId"
+        android:layout_alignBottom="@+id/textViewId"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:id="@+id/editTextAge"
+        android:text="Age"
+        android:layout_alignBaseline="@+id/textViewAge"
+        android:layout_alignBottom="@+id/textViewAge"
+        android:layout_toRightOf="@+id/textViewAge"
+        android:layout_toEndOf="@+id/textViewAge" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Nom"
+        android:ems="10"
+        android:id="@+id/editTextNom"
+        android:layout_alignBaseline="@+id/textViewNom"
+        android:layout_alignBottom="@+id/textViewNom"
+        android:layout_alignLeft="@+id/editTextAge"
+        android:layout_alignStart="@+id/editTextAge" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextPrenom"
+        android:text="Prenom"
+        android:layout_alignBaseline="@+id/textViewPrenom"
+        android:layout_alignBottom="@+id/textViewPrenom"
+        android:layout_alignLeft="@+id/editTextNom"
+        android:layout_alignStart="@+id/editTextNom" />
+
+    <Button
+        android:text="Valider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/buttonValidation" />
+
+</RelativeLayout>
