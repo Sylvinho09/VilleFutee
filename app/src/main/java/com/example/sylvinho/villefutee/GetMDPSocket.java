@@ -40,16 +40,22 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, String> {
             socket = StaticSocket.getSocket();
 
 
-            System.out.println("Demande de connexion");
+            /*System.out.println("Demande de connexion");
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String message_distant = in.readLine();
             System.out.println(message_distant); //affiche "vous etes connecté";
-            System.out.println("type de socket: "+ socket.getClass()+ " "+ socket);
-            out = new PrintWriter(socket.getOutputStream());
+            System.out.println("type de socket: "+ socket.getClass()+ " "+ socket);*/
 
-            out.println(params[0].id + " "+ params[0].mdp); //params[0] contiendra normalement l'identifiant rentré par l'user
+            out = new PrintWriter(socket.getOutputStream());
+            out.println("idMdp"); //On envoie ça au serveur pour qu'il sache ce qu'on veut
+            out.flush();
+            System.out.println("entre les 2 out");
+            out = new PrintWriter(socket.getOutputStream());
+            /** params[0].id contient l'id et params[0].mdp le mdp **/
+            out.println(params[0].id + " "+ params[0].mdp);
 
             out.flush();
+            System.out.println("apres les 2 out");
 
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -65,6 +71,8 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, String> {
             }
 
             socket.close();
+            System.out.println("a la fin");
+
             return result;
 
         } catch (UnknownHostException e) {
