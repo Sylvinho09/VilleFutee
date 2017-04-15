@@ -16,6 +16,7 @@ import java.nio.CharBuffer;
 public class EnvoiForm extends AsyncTask<Formulaire, Void, String>{
     private Socket socket;
     private PrintWriter out;
+    private BufferedReader in;
 
 
 
@@ -24,23 +25,36 @@ public class EnvoiForm extends AsyncTask<Formulaire, Void, String>{
 
         try {
 
-            if (StaticSocket.getI() == 0) {
+            //if (StaticSocket.getI() == 0) {
                 Socket socket2;
                 socket2 = new Socket("172.20.10.4", 8050);
                 StaticSocket.setSocket(socket2);
                 socket = StaticSocket.getSocket();
-            }
-            else socket=StaticSocket.getSocket();
+          //  }
+           // else socket=StaticSocket.getSocket();
             out = new PrintWriter(socket.getOutputStream());
+            System.out.println("j'envoie");
             out.println("Create"); //On envoie ça au serveur pour qu'il sache ce qu'on veut
             out.flush(); // les données sont automatiquement envoyées si le buffer est plein (1000 octets de base je crois), sinon il faut flush
-
+            System.out.println("j'envoie2");
             System.out.println("données envoyées envoiform: "+params[0].prenom+" "+params[0].nom+" "+params[0].age+" "+params[0].ville+" "+params[0].identifiant+" "+params[0].mdp);
 
+            
             out.println(params[0].prenom+" "+params[0].nom+" "+params[0].age+" "+params[0].ville+" "+params[0].identifiant+" "+params[0].mdp);
             out.flush();
 
-            return "ok";
+
+
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            char[] reponse= new char[5];
+            int message_length=in.read(reponse);
+            String cvtReponse= new String(reponse).trim();
+
+
+
+            System.out.println("fin");
+
+            return cvtReponse;
 
 
 

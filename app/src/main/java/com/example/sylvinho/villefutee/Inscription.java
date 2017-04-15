@@ -49,6 +49,7 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
                 EditText eage = (EditText) findViewById(R.id.editTextAge);
                 String age = eage.getText().toString();
 
+
                 String ville= spinner.getSelectedItem().toString();
 
                 EditText eidentifiant= (EditText)findViewById(R.id.editTextId);
@@ -61,40 +62,69 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
 
                 String[] spacePrenom = prenom.trim().split("\\s");
                 String[] spaceNom = nom.trim().split("\\s");
-                String[] spaceAge = prenom.trim().split("\\s");
-                String[] spaceIdentifiant = nom.trim().split("\\s");
-                String[] spaceMdp = prenom.trim().split("\\s");
+                String[] spaceAge = age.trim().split("\\s");
+                String[] spaceIdentifiant = identifiant.trim().split("\\s");
+                String[] spaceMdp = mdp.trim().split("\\s");
 
 
-                if(mdp.trim().length()==0 || identifiant.trim().length()==0 || ville.trim().length()==0 ||
+                if(mdp.trim().length()==0 || identifiant.trim().length()==0 ||
                 age.trim().length()==0 || nom.trim().length()==0 || prenom.trim().length()==0)
                 {
-                    Toast.makeText(getApplicationContext(), "Merci de remplir toutes les informations.", Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), "Merci de remplir toutes les informations.", Toast.LENGTH_LONG).show();
                 }
 
 
-                else if(!spacePrenom[0].equals(prenom) || !spaceNom[0].equals(nom) || !spaceAge[0].equals(age)
-                        || !spaceIdentifiant[0].equals(identifiant) || !spaceMdp[0].equals(mdp))
+                else if(!spacePrenom[0].trim().equals(prenom.trim()) || !spaceNom[0].trim().equals(nom.trim()) || !spaceAge[0].trim().equals(age.trim())
+                        || !spaceIdentifiant[0].trim().equals(identifiant.trim()) || !spaceMdp[0].trim().equals(mdp.trim()))
                 {
-                    Toast.makeText(getApplicationContext(), "Merci de ne pas mettre d'espace.", Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), "Merci de ne pas mettre d'espace.", Toast.LENGTH_LONG).show();
                 }
 
+                else if(mdp.trim().length()>30 || identifiant.trim().length()>=30 || age.trim().length()>30
+                        || nom.trim().length()>30 || prenom.trim().length()>30)
+                {
+                    Toast.makeText(getApplicationContext(), "Chaque saisie doit contenir au maximum 30 caractères.", Toast.LENGTH_LONG).show();
+                }
+                else if(mdp.trim().length()<6 || identifiant.trim().length()<4)
+                {
+                    Toast.makeText(getApplicationContext(), "L'identifiant doit contenir au moins 4 caractères et le mot de passe 6", Toast.LENGTH_LONG).show();
+
+                }
                 else {
-                    Formulaire datas = new Formulaire(prenom, nom, age, ville, identifiant, mdp);
-                    System.out.println("données passées au thread: " + datas.toString());
-                    System.out.println("Formulaire va lancer le thread");
-                    String result = "";
-                    try {
-                        result = new EnvoiForm().execute(datas).get();
+
+                    try
+                    {
+
+                        int intage = Integer.parseInt(age);
+                        if(14 <=intage && intage <=120) {
+                            Formulaire datas = new Formulaire(prenom, nom, age, ville, identifiant, mdp);
+                            System.out.println("données passées au thread: " + datas.toString());
+                            System.out.println("Formulaire va lancer le thread");
+                            String result = "";
+
+                            result = new EnvoiForm().execute(datas).get();
+                            if(result.trim().equals("Ok")) {
+                                Toast.makeText(getApplicationContext(), "Compte créé avec succès !", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                            else if(result.trim().equals("Error"))
+                            {
+                                Toast.makeText(getApplicationContext(), "Il y a eu une erreur. Réessayez.", Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+                        else Toast.makeText(getApplicationContext(), "Vous devez avoir entre 14 et 120 ans!", Toast.LENGTH_LONG).show();
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
+                    } catch(NumberFormatException e)
+                    {
+                        Toast.makeText(getApplicationContext(),"Veuillez rentrer un âge correct.", Toast.LENGTH_LONG).show();
                     }
 
-                    Toast.makeText(getApplicationContext(), "Compte créé avec succès !", Toast.LENGTH_LONG).show();
-                    //finish();
+
                 }
 
             }

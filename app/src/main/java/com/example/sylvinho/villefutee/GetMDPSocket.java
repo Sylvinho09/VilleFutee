@@ -33,11 +33,13 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, String> {
 
         try {
             //System.out.println("ici : "+InetAddress.getLocalHost() + "ici "+InetAddress.getLocalHost().getHostAddress());
-            System.out.println("valeur: "+params[0]+ " "+params[0].mdp);
-            Socket socket2;
-            socket2 = new Socket("172.20.10.4", 8050);
-            StaticSocket.setSocket(socket2);
-            socket = StaticSocket.getSocket();
+            System.out.println("valeur: "+params[0].id+ " "+params[0].mdp);
+
+                Socket socket2;
+                socket2 = new Socket("172.20.10.4", 8050);
+                StaticSocket.setSocket(socket2);
+                socket = StaticSocket.getSocket();
+
 
 
             /*System.out.println("Demande de connexion");

@@ -56,15 +56,22 @@ public class ConnexionPage extends AppCompatActivity {
 
                                            String[] spaceId = getId.trim().split("\\s");
                                            String[] spaceMdp = getMdp.trim().split("\\s");
-                                           if(!spaceId[0].equals(getId) || !spaceMdp[0].equals(getMdp))
+                                           if(!spaceId[0].trim().equals(getId.trim()) || !spaceMdp[0].trim().equals(getMdp.trim()))
                                            {
 
                                                          Toast.makeText(getApplicationContext(), "Veuillez ne pas mettre d'espace.", Toast.LENGTH_LONG).show();
                                            }
+                                           else if(getMdp.length()==0 || getId.length()==0) {
 
+                                               Toast.makeText(getApplicationContext(), "Au moins une saisie est vide.", Toast.LENGTH_LONG).show();
 
+                                           }
+                                           else if(getMdp.length()>30 || getId.length()>30) {
+                                               Toast.makeText(getApplicationContext(), "Chaque saisie contient au maximum 30 caractères.", Toast.LENGTH_LONG).show();
 
-                                           else {
+                                           }
+
+                                               else {
                                                String result = "";
 
                                                try {

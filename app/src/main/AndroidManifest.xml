@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConnexionPage" android:noHistory="true"> <!-- noHistory -> ferme l'activité automatiquement
+        <activity android:name=".ConnexionPage"> <!-- noHistory -> ferme l'activité automatiquement
         quand elle lance un intent -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
