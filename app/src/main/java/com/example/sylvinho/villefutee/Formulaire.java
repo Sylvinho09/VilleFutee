@@ -15,6 +15,8 @@ public class Formulaire {
     String identifiant;
     String mdp;
 
+
+    public Formulaire(){}
     public Formulaire(String prenom, String nom, String age, String ville, String identifiant, String mdp)
     {
         this.prenom=prenom;
@@ -23,5 +25,11 @@ public class Formulaire {
         this.ville=ville;
         this.identifiant=identifiant;
         this.mdp=mdp;
+    }
+
+    public String toString()
+    {
+        return prenom+ " "+nom+" "+age+" "+ville+ " "+identifiant+" "+mdp;
+
     }
 }

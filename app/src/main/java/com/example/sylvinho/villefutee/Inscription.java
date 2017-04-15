@@ -54,24 +54,48 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
                 EditText eidentifiant= (EditText)findViewById(R.id.editTextId);
                 String identifiant = eidentifiant.getText().toString();
 
+
+
                 EditText emdp= (EditText)findViewById(R.id.editTextMdp);
                 String mdp= emdp.getText().toString();
 
-                Formulaire datas= new Formulaire(prenom, nom, age, ville, identifiant, mdp);
-                System.out.println("Formulaire va lancer le thread");
-                String result="";
-                try {
-                    result = new EnvoiForm().execute(datas).get();
+                String[] spacePrenom = prenom.trim().split("\\s");
+                String[] spaceNom = nom.trim().split("\\s");
+                String[] spaceAge = prenom.trim().split("\\s");
+                String[] spaceIdentifiant = nom.trim().split("\\s");
+                String[] spaceMdp = prenom.trim().split("\\s");
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+
+                if(mdp.trim().length()==0 || identifiant.trim().length()==0 || ville.trim().length()==0 ||
+                age.trim().length()==0 || nom.trim().length()==0 || prenom.trim().length()==0)
+                {
+                    Toast.makeText(getApplicationContext(), "Merci de remplir toutes les informations.", Toast.LENGTH_LONG);
                 }
 
-                Toast.makeText(getApplicationContext(), "Compte créé avec succès !", Toast.LENGTH_LONG).show();
-                finish();
 
+                else if(!spacePrenom[0].equals(prenom) || !spaceNom[0].equals(nom) || !spaceAge[0].equals(age)
+                        || !spaceIdentifiant[0].equals(identifiant) || !spaceMdp[0].equals(mdp))
+                {
+                    Toast.makeText(getApplicationContext(), "Merci de ne pas mettre d'espace.", Toast.LENGTH_LONG);
+                }
+
+                else {
+                    Formulaire datas = new Formulaire(prenom, nom, age, ville, identifiant, mdp);
+                    System.out.println("données passées au thread: " + datas.toString());
+                    System.out.println("Formulaire va lancer le thread");
+                    String result = "";
+                    try {
+                        result = new EnvoiForm().execute(datas).get();
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                    Toast.makeText(getApplicationContext(), "Compte créé avec succès !", Toast.LENGTH_LONG).show();
+                    //finish();
+                }
 
             }
         });

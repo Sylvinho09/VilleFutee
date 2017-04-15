@@ -35,6 +35,8 @@ public class EnvoiForm extends AsyncTask<Formulaire, Void, String>{
             out.println("Create"); //On envoie ça au serveur pour qu'il sache ce qu'on veut
             out.flush(); // les données sont automatiquement envoyées si le buffer est plein (1000 octets de base je crois), sinon il faut flush
 
+            System.out.println("données envoyées envoiform: "+params[0].prenom+" "+params[0].nom+" "+params[0].age+" "+params[0].ville+" "+params[0].identifiant+" "+params[0].mdp);
+
             out.println(params[0].prenom+" "+params[0].nom+" "+params[0].age+" "+params[0].ville+" "+params[0].identifiant+" "+params[0].mdp);
             out.flush();
 
