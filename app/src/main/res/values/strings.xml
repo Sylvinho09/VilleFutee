@@ -24,6 +24,10 @@
         <item> Gateaux</item>
         <item> Céréales</item>
         <item> Lait </item>
+        <item> Fromage </item>
+        <item> Coca </item>
+        <item> Sprite </item>
+        <item> Ice-Tea </item>
     </string-array>
 
     <string-array name="spinner">
@@ -37,5 +41,12 @@
         <item>Metz</item>
         <item>Lille</item>
         <item>Marseille</item>
+    </string-array>
+
+    <string-array name="domaine">
+        <item>Automobile</item>
+        <item>Grande distribution</item>
+        <item>Pharmacie</item>
+        <item>Multimédia</item>
     </string-array>
 </resources>

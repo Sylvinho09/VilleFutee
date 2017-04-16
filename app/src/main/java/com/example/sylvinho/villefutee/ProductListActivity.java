@@ -24,10 +24,7 @@ public class ProductListActivity extends ListActivity {
         Toast.makeText(this, "ICIIIII", Toast.LENGTH_LONG);
         ListView listview = getListView();
         String[] produits = getResources().getStringArray(R.array.produits);
-        for(int i= 0; i< produits.length; i++)
-        {
-            System.out.println("ici "+produits[i]);
-        }
+
         setListAdapter(new ArrayAdapter<String>(this, R.layout.products, produits));
 
 
@@ -35,8 +32,6 @@ public class ProductListActivity extends ListActivity {
     }
 
 
-    /** Sera utilisé pour savoir si un item est checké ou non, et on modifie le tableau contenant les objets cochés
-     * en conséquence qu'on mettra dans le fichier que l'activité de départ lira */
     public void onListItemClick(ListView parent, View v, int position, long id) {
         //CheckedTextView item = (CheckedTextView) v;
         Toast.makeText(this, /*produits[position] +*/ " checked : "

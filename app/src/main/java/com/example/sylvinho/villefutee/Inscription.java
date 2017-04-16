@@ -5,21 +5,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.dom.Text;
 
 import java.util.concurrent.ExecutionException;
-
+import com.example.sylvinho.villefutee.multispinner.multispinnerListener;
 /**
  * Created by sylvinho on 14/04/2017.
  */
 
-public class Inscription extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class Inscription extends AppCompatActivity implements AdapterView.OnItemSelectedListener, multispinnerListener{
 
-
+    private CheckBox client;
+    private CheckBox commercant;
     private Spinner spinner;
+    private Spinner spinner2;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -35,6 +44,79 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         //spinner.getSelectedItem().toString();
+
+       /* spinner2 = (Spinner)findViewById(R.id.spinner2);
+        String[] domaine= getResources().getStringArray(R.array.domaine);
+        ArrayAdapter<String>adapter2 = new ArrayAdapter<String>(Inscription.this,
+                android.R.layout.simple_spinner_item, domaine);
+
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setAdapter(adapter2);
+        spinner2.setOnItemSelectedListener(this);
+        spinner2.setVisibility(View.INVISIBLE);*/
+
+        multispinner ms = (multispinner) findViewById(R.id.spinner2);
+        List<String> list = new ArrayList<String>();
+        String[] domaine= getResources().getStringArray(R.array.domaine);
+        for(int i=0; i<domaine.length; i++)
+        {
+            list.add(domaine[i]);
+        }
+        ms.setItems(list, "Domaine", this);
+
+         client = (CheckBox) findViewById(R.id.checkBox);
+        commercant = (CheckBox) findViewById(R.id.checkBox2);
+
+        client.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               // client.setChecked(true);
+                if(client.isChecked() && commercant.isChecked()) {
+
+                    commercant.setChecked(false);
+                    client.setChecked(true);
+                    spinner2.setVisibility(View.INVISIBLE);
+                    TextView tprenom = (TextView) findViewById(R.id.textViewPrenom);
+                    tprenom.setText("Prénom");
+                    TextView tage= (TextView)findViewById(R.id.textViewAge);
+                    tage.setText("Age");
+                    EditText eage = (EditText) findViewById(R.id.editTextAge);
+                    eage.setVisibility(View.VISIBLE);
+
+
+
+
+
+                }
+            }
+        });
+
+        commercant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(commercant.isChecked() && client.isChecked()) {
+                    client.setChecked(false);
+                    commercant.setChecked(true);
+                    spinner2.setVisibility(View.VISIBLE);
+
+
+
+                    TextView tprenom = (TextView) findViewById(R.id.textViewPrenom);
+
+                    tprenom.setText("Adresse");
+                    //EditText eprenom = (EditText) findViewById(R.id.editTextPrenom);
+
+                    TextView tage= (TextView)findViewById(R.id.textViewAge);
+                    tage.setText("Domaine");
+                    EditText eage = (EditText) findViewById(R.id.editTextAge);
+                    eage.setVisibility(View.INVISIBLE);
+
+                }
+
+            }
+        }
+        );
+
 
         Button valider= (Button) findViewById(R.id.buttonValidation);
         valider.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +221,11 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onItemschecked(boolean[] checked) {
 
     }
 }
