@@ -45,7 +45,7 @@
 
     <string-array name="domaine">
         <item>Automobile</item>
-        <item>Grande distribution</item>
+        <item>Supermarché</item>
         <item>Pharmacie</item>
         <item>Multimédia</item>
     </string-array>

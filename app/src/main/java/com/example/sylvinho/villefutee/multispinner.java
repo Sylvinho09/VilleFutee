@@ -41,12 +41,16 @@ public class multispinner extends Spinner implements
             checked[ans] = false;
     }
 
+    public boolean[] getChecked()
+    {
+        return checked;
+    }
 
     @Override
     public void onCancel(DialogInterface dialog)
     {
 
-        String str="Selected values are: ";
+        /*String str="Selected values are: ";
 
         for (int i = 0; i < listitems.size(); i++)
         {
@@ -65,7 +69,7 @@ public class multispinner extends Spinner implements
 
         alert1.setPositiveButton("Ok", null);
 
-        alert1.show();
+        alert1.show();*/
 
 
     }
@@ -76,7 +80,7 @@ public class multispinner extends Spinner implements
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMultiChoiceItems(
                 listitems.toArray(new CharSequence[listitems.size()]), checked, this);
-        builder.setPositiveButton("done",
+        builder.setPositiveButton("Valider",
                 new DialogInterface.OnClickListener()
                 {
 
@@ -105,6 +109,8 @@ public class multispinner extends Spinner implements
                 android.R.layout.simple_spinner_item, new String[] { allText });
         setAdapter(adapter);
     }
+
+
 
     public interface multispinnerListener
     {

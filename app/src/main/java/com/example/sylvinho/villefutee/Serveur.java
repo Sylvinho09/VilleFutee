@@ -48,7 +48,7 @@ public class Serveur {
                  **/
                 System.out.println("je me mets en réception de la demande");
 
-                char[] recep = new char[6];
+                char[] recep = new char[7]; /**idMdp, Create, Get...*/
 
                 int message_length = in.read(recep);
 
@@ -156,6 +156,87 @@ public class Serveur {
                         out.println("Error");
                         out.flush();
                     }
+
+                }
+                else if(extract.trim().equals("CCreate"))
+                {
+                    System.out.println("message reçu du commerçant qui veut créer un compte");
+                    char[] formbufferCommercant = new char[210];
+
+                    Formulaire form = new Formulaire();
+
+                    /**
+                     * do while obligatoire sinon si on veut refaire une 2eme
+                     * inscription d'affilée, le read renvoie 1 je ne sais pas
+                     * pourquoi
+                     */
+                    int message_lengthCreate = 0;
+                    do {
+                        message_lengthCreate = in.read(formbufferCommercant, 0, 210);
+                        System.out.println("ici");
+
+                    } while (message_lengthCreate == 1);
+                    System.out.println("valeur read " + message_lengthCreate);
+                    String valueForm = new String(formbufferCommercant);
+
+                    System.out.println("données recues: " + valueForm.trim());
+
+                    // Obtient un tableau avec à chaque case une donnée saisie
+                    String[] datas = valueForm.toString().trim().split("\\s+");
+                    System.out.println("avant le try");
+
+					/*System.out.println("affichage commercant ");
+					for(int i=0; i< datas.length; i++)
+					{
+						System.out.println( datas[i]+ " ");
+					}*/
+                    try
+                    {
+                        int tailleAdresse= Integer.parseInt(datas[0].trim());
+                        int i;
+                        for(i=1; i< 1+ tailleAdresse; i++)
+                        {
+                            form.adresseServeur.addElement(datas[i].trim());
+                        }
+                        System.out.println("affichage adresse: "+form.adresseServeur.toString());
+                        //i++;
+                        form.nom=datas[i].trim();
+                        System.out.println("affichage nom: "+form.nom);
+
+                        i++;
+                        int tailleDomaine= Integer.parseInt(datas[i].trim());
+                        System.out.println("affichage taille domaine: "+tailleDomaine);
+
+                        i++;
+                        int j;
+                        System.out.println("au milieu");
+                        for(j=i; j<i+tailleDomaine; j++)
+                        {
+                            form.domaines.addElement(datas[j].trim());
+                        }
+                        System.out.println("affichage domaines: "+form.domaines.toString());
+
+
+                        form.ville=datas[j].trim();
+                        System.out.println("affichage ville: "+form.ville);
+
+                        form.identifiant=datas[j+1].trim();
+                        System.out.println("affichage id: "+form.identifiant);
+
+                        form.mdp=datas[j+2].trim();
+                        System.out.println("affichage mdp: "+form.mdp);
+
+
+                        out.println("Ok");
+                        out.flush();
+
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("dans le catch");
+                        out.println("Error");
+                        out.flush();
+                    }
+
+
 
                 }
             }
