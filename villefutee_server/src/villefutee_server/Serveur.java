@@ -1,4 +1,4 @@
-package com.example.sylvinho.villefutee;
+package villefutee_server;
 
 /**
  * Created by sylvinho on 12/04/2017.
@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 
 public class Serveur {
 
