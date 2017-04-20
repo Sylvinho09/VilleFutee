@@ -16,11 +16,66 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.io.PrintWriter;
 import java.nio.CharBuffer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Serveur {
 
-    public static void main(String[] zero) {
+	public static void getPersonne(String identifiant){
+		/* Chargement du driver JDBC pour MySQL */
+		try {
+		    Class.forName( "com.mysql.jdbc.Driver" );
+		} catch ( ClassNotFoundException e ) {
+			System.out.println("erreur driver");
+		    /* Gérer les éventuelles erreurs ici. */
+		}
+		
+		/* Connexion à la base de données */
+		String url = "jdbc:mysql://localhost:3306/mybd";
+		String utilisateur = "root";
+		String motDePasse = "w223fgh52ty001jq";
+		Connection connexion = null;
+		try {
+		    connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
 
+		    /* Création de l'objet gérant les requêtes */
+		    Statement statement = connexion.createStatement();
+		    /* Exécution d'une requête de lecture */
+		    ResultSet resultat = statement.executeQuery( "SELECT *  FROM Utilisateur;" );
+		    
+		    /* Récupération des données du résultat de la requête de lecture */
+		    while ( resultat.next() ) {
+		        int idUtilisateur = resultat.getInt( "id" );
+		        String mdp = resultat.getString( "mdp" );
+		        String nom = resultat.getString( "nom" );
+		        String prenom = resultat.getString( "prenom" );
+		        String date = resultat.getString( "DateCompte" );
+
+		        System.out.println("Utilisateur "+idUtilisateur+" "+mdp+" "+nom+" "+prenom+" "+date+" ");
+		    }
+
+		} catch ( SQLException e ) {
+
+			System.out.println("erreur sql");
+		    /* Gérer les éventuelles erreurs ici */
+		} finally {
+		    if ( connexion != null )
+		        try {
+		            /* Fermeture de la connexion */
+		            connexion.close();
+		        } catch ( SQLException ignore ) {
+					System.out.println("erreur close");
+		            /* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+		        }
+		}
+		
+		
+	}
+	public static void main(String[] zero) {
+		Serveur.getPersonne("test");
         ServerSocket socketserver;
         Socket socketduserveur;
 
