@@ -69,14 +69,14 @@ public class EnvoiForm extends AsyncTask<Formulaire, Void, String>{
 
 
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            char[] reponse= new char[5];
+            char[] reponse= new char[10];
             int message_length=in.read(reponse);
             String cvtReponse= new String(reponse).trim();
 
 
 
             System.out.println("fin");
-
+            System.out.println(cvtReponse);
             return cvtReponse;
 
 

@@ -183,14 +183,14 @@
         android:layout_alignStart="@+id/editTextId"
         android:layout_alignTop="@+id/editTextAge" />-->
 
-    <com.example.sylvinho.villefutee.multispinner
+    <com.example.paul.villefutee_android.multispinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textViewVille"
         android:id="@+id/spinner2"
         android:layout_alignLeft="@+id/editTextId"
         android:layout_alignStart="@+id/editTextId"
-        android:layout_alignTop="@+id/editTextAge" ></com.example.sylvinho.villefutee.multispinner>
+        android:layout_alignTop="@+id/editTextAge" ></com.example.paul.villefutee_android.multispinner>
 
 
 </RelativeLayout>

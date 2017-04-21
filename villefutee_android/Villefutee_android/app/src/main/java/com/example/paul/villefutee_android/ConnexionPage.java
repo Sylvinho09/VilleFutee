@@ -19,10 +19,6 @@ import android.widget.Toast;
 public class ConnexionPage extends AppCompatActivity {
 
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connexion_page);
@@ -33,6 +29,7 @@ public class ConnexionPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myintent = new Intent(getApplicationContext(), Inscription.class);
+
                 startActivity(myintent);
             }
         });

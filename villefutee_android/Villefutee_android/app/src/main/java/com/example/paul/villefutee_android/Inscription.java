@@ -65,7 +65,7 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
         {
             list.add(domaine[i]);
         }
-        ms.setItems(list, "Domaine", this);
+        ms.setItems(list, "Sélectionner domaine(s)", this);
         ms.setVisibility(View.INVISIBLE);
 
          client = (CheckBox) findViewById(R.id.checkBox);
@@ -235,7 +235,7 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
                     Toast.makeText(getApplicationContext(), "L'identifiant doit contenir au moins 4 caractères et le mot de passe 6", Toast.LENGTH_LONG).show();
 
                 }
-                else if(selectedItems.size()==0)
+                else if(selectedItems.size()==0 && commercant.isChecked())
                 {
                     Toast.makeText(getApplicationContext()," Veuillez sélectionner au moins 1 domaine !", Toast.LENGTH_LONG).show();
                 }
@@ -267,6 +267,11 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
                             else if(result.trim().equals("Error"))
                             {
                                 Toast.makeText(getApplicationContext(), "Il y a eu une erreur. Réessayez.", Toast.LENGTH_LONG).show();
+
+                            }
+                            else if(result.trim().equals("ErrorName"))
+                            {
+                                Toast.makeText(getApplicationContext(), "Cet identifiant est déjà utilisé.", Toast.LENGTH_LONG).show();
 
                             }
 

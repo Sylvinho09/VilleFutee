@@ -48,7 +48,7 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, String> {
             System.out.println("type de socket: "+ socket.getClass()+ " "+ socket);*/
 
             out = new PrintWriter(socket.getOutputStream());
-            out.println("idMdp"); //On envoie ça au serveur pour qu'il sache ce qu'on veut
+            out.println(new String("idMdp").trim()); //On envoie ça au serveur pour qu'il sache ce qu'on veut
             out.flush();
             System.out.println("entre les 2 out");
             out = new PrintWriter(socket.getOutputStream());

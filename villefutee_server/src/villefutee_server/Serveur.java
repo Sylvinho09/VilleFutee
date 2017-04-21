@@ -1,7 +1,6 @@
-package villefutee_server;
+package SocketAndroid;
 
-/**
- * Created by sylvinho on 12/04/2017.
+/* Created by sylvinho on 12/04/2017.
  * A lancer autre part ***
  */
 import java.io.BufferedReader;
@@ -31,25 +30,26 @@ public class Serveur {
 		    Class.forName( "com.mysql.jdbc.Driver" );
 		} catch ( ClassNotFoundException e ) {
 			System.out.println("erreur driver");
-		    /* Gérer les éventuelles erreurs ici. */
+		    /* Gï¿½rer les ï¿½ventuelles erreurs ici. */
 		}
 		
-		/* Connexion à la base de données */
-		String url = "jdbc:mysql://localhost:3306/mybd";
+		/* Connexion ï¿½ la base de donnï¿½es */
+		String url = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
 		String utilisateur = "root";
-		String motDePasse = "w223fgh52ty001jq";
+		String motDePasse = "ffry6by6";
 		Connection connexion = null;
 		try {
 		    connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
-
-		    /* Création de l'objet gérant les requêtes */
-		    Statement statement = connexion.createStatement();
-		    /* Exécution d'une requête de lecture */
-		    ResultSet resultat = statement.executeQuery( "SELECT *  FROM Utilisateur;" );
 		    
-		    /* Récupération des données du résultat de la requête de lecture */
+		    /* Crï¿½ation de l'objet gï¿½rant les requï¿½tes */
+		    Statement statement = connexion.createStatement();
+		    /* Exï¿½cution d'une requï¿½te de lecture */
+		    ResultSet resultat = statement.executeQuery( "SELECT *  FROM Utilisateur where identifiant='"+identifiant+"';" );
+		    
+		    /* Rï¿½cupï¿½ration des donnï¿½es du rï¿½sultat de la requï¿½te de lecture */
 		    while ( resultat.next() ) {
-		        int idUtilisateur = resultat.getInt( "id" );
+		    	
+		        String idUtilisateur = resultat.getString( "identifiant" );
 		        String mdp = resultat.getString( "mdp" );
 		        String nom = resultat.getString( "nom" );
 		        String prenom = resultat.getString( "prenom" );
@@ -59,9 +59,9 @@ public class Serveur {
 		    }
 
 		} catch ( SQLException e ) {
-
+			e.printStackTrace();
 			System.out.println("erreur sql");
-		    /* Gérer les éventuelles erreurs ici */
+		    /* Gï¿½rer les ï¿½ventuelles erreurs ici */
 		} finally {
 		    if ( connexion != null )
 		        try {
@@ -76,7 +76,8 @@ public class Serveur {
 		
 	}
 	public static void main(String[] zero) {
-		Serveur.getPersonne("test");
+		//Serveur.getPersonne("Sylvinho09");
+		StaticMethodForBDD.getPersonne("Sylvinho09");
         ServerSocket socketserver;
         Socket socketduserveur;
 
@@ -87,7 +88,7 @@ public class Serveur {
 
             socketserver.bind(new InetSocketAddress(InetAddress.getLocalHost().getHostName(), 8050));
 
-            System.out.println("Le serveur est Ã  l'Ã©coute du port " + socketserver.getLocalPort() + " Ã  l'adresse IP "
+            System.out.println("Le serveur est Ã  l'Ã©coute du port oui " + socketserver.getLocalPort() + " Ã  l'adresse IP "
                     + socketserver.getInetAddress().getHostAddress());
 
             while (true) {
@@ -152,14 +153,14 @@ public class Serveur {
                     /**
                      * on vÃ©rifie dans la bdd la correspondance identifiant-mdp
                      **/
-
-                    /** On renvoie maintenant si le MDP est correct ou non **/
-                    if (id.trim().equals("Sylvinho09") && mdp.trim().equals("blabla"))
-                        out.println("Yes");
-                    else
-                        out.println("No"); // Yes or no
+                    
+                    String reponse=StaticMethodForBDD.LoginPasswordValidation(id, mdp);
+                    out.println(reponse.trim());
                     out.flush();
-                    System.out.println("3rd step");
+                   
+
+                   
+                  
 
                 }
 
@@ -202,7 +203,8 @@ public class Serveur {
                         // formbuffer.clear();
                         System.out.println("donnÃ©es reÃ§ues :" + form.toString());
 
-                        out.println("Ok");
+                        String resultat=StaticMethodForBDD.ajoutClient(form.prenom, form.nom, form.age, form.ville, form.identifiant, form.mdp);
+                        out.println(resultat); //ajoutClient retourne Ok ou Error;
                         out.flush();
 
                         // On ajoute maintenant ces donnÃ©es dans la base de
@@ -283,7 +285,9 @@ public class Serveur {
                         System.out.println("affichage mdp: "+form.mdp);
 
 
-                        out.println("Ok");
+                        String result = StaticMethodForBDD.ajoutCommercant(form.adresseServeur, form.nom, form.domaines, form.ville, form.identifiant, form.mdp);
+                        System.out.println("Valeur de result :"+result);
+                        out.println(result.trim());
                         out.flush();
 
                     } catch (ArrayIndexOutOfBoundsException e) {
