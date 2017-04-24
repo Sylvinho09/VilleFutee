@@ -3,6 +3,8 @@
     package="com.example.paul.villefutee_android">
     <!-- android:icon pour modifier l'icone de l'application -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:label="@string/app_name"

@@ -52,6 +52,24 @@
              android:layout_alignParentLeft="true"
              android:layout_alignParentStart="true" />
 
+         <ImageView
+             android:id="@+id/imageView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentTop="true"
+             android:layout_centerHorizontal="true"
+             android:layout_marginTop="175dp"
+            />
+
+         <Button
+             android:id="@+id/button2"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Éditer mon profil"
+             android:layout_above="@+id/button3"
+             android:layout_centerHorizontal="true"
+             android:layout_marginBottom="114dp" />
+
          <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
 
 

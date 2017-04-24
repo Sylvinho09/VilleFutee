@@ -13,7 +13,14 @@ import android.widget.Button;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.content.Context;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.graphics.Bitmap;
+import java.io.FileNotFoundException;
+
 
 public class MainAccount extends AppCompatActivity {
     private String[] mesItems;
@@ -23,6 +30,8 @@ public class MainAccount extends AppCompatActivity {
     /** liste des produits préférés (stockés dans un fichier qui doit être lu ou créé dans le onCreate **/
     private String[] produitsPrefs;
     static final int PRODUCT_CHOICE =1; /** identifiant de l'intent généré **/
+
+    ImageView targetImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +39,11 @@ public class MainAccount extends AppCompatActivity {
         final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final FrameLayout fm = (FrameLayout) findViewById(R.id.nav_view);
         final FrameLayout fm2 = (FrameLayout) findViewById(R.id.nav_viewright);
+
+        Button buttonEditProfile = (Button)findViewById(R.id.button2);
+
+       // targetImage = (ImageView)findViewById(R.id.imageView);
+
 
         //ImageButton navLauncher = (ImageButton) findViewById(R.id.imageButton3);
         // Button buttonright = (Button) findViewById(R.id.buttonnav);
@@ -100,11 +114,24 @@ public class MainAccount extends AppCompatActivity {
                 mDrawerLayout.openDrawer(fm2);
             }
         });
+
+        buttonEditProfile.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                System.out.println("Je suis dans le intent");
+
+              /*  // TODO Auto-generated method stub
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 0);
+                System.out.println("intent lancé");
+                Toast.makeText(getApplicationContext(), "cliqué ", Toast.LENGTH_LONG).show();*/
+
+            }});
     }
 
-    /** Fonctionnement : la nouvelle activité écrira dans le fichier "produitsPrefs" seulement quand le client
-     appuiera sur "Valider", retournant RESULT_HAS_CHANGED si au moins 1 produit a été retiré/ajouté et donc
-     on devra mettre à jour la liste des produits préférés du client. Sinon retourne RESULT_UNCHANGED et on ne fait rien. **/
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -112,5 +139,26 @@ public class MainAccount extends AppCompatActivity {
         {
         Toast.makeText(this, "dans le onActivityResult", Toast.LENGTH_LONG);
         }
+
+
+        /*** NE FONCTIONNE PAS, Permet de changer la photo de profil de l'utilisateur ***/
+       /* if (resultCode == RESULT_OK){
+            System.out.println("Je suis dans le onActivityResult");
+            Uri targetUri = data.getData();
+
+            Bitmap bitmap;
+            Toast.makeText(getApplicationContext(), "dans le onActResult", Toast.LENGTH_LONG).show();//OK
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inSampleSize = 1;
+            try {
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri), null, options);
+                //targetImage.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }*/
     }
+
 }
