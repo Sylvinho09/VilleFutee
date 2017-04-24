@@ -1,4 +1,4 @@
-package SocketAndroid;
+package villefutee_server;
 
 /* Created by sylvinho on 12/04/2017.
  * A lancer autre part ***
@@ -24,65 +24,23 @@ import java.sql.Statement;
 
 public class Serveur {
 
-	public static void getPersonne(String identifiant){
-		/* Chargement du driver JDBC pour MySQL */
-		try {
-		    Class.forName( "com.mysql.jdbc.Driver" );
-		} catch ( ClassNotFoundException e ) {
-			System.out.println("erreur driver");
-		    /* G�rer les �ventuelles erreurs ici. */
-		}
-		
-		/* Connexion � la base de donn�es */
-		String url = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
-		String utilisateur = "root";
-		String motDePasse = "ffry6by6";
-		Connection connexion = null;
-		try {
-		    connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
-		    
-		    /* Cr�ation de l'objet g�rant les requ�tes */
-		    Statement statement = connexion.createStatement();
-		    /* Ex�cution d'une requ�te de lecture */
-		    ResultSet resultat = statement.executeQuery( "SELECT *  FROM Utilisateur where identifiant='"+identifiant+"';" );
-		    
-		    /* R�cup�ration des donn�es du r�sultat de la requ�te de lecture */
-		    while ( resultat.next() ) {
-		    	
-		        String idUtilisateur = resultat.getString( "identifiant" );
-		        String mdp = resultat.getString( "mdp" );
-		        String nom = resultat.getString( "nom" );
-		        String prenom = resultat.getString( "prenom" );
-		        String date = resultat.getString( "DateCompte" );
-
-		        System.out.println("Utilisateur "+idUtilisateur+" "+mdp+" "+nom+" "+prenom+" "+date+" ");
-		    }
-
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-			System.out.println("erreur sql");
-		    /* G�rer les �ventuelles erreurs ici */
-		} finally {
-		    if ( connexion != null )
-		        try {
-		            /* Fermeture de la connexion */
-		            connexion.close();
-		        } catch ( SQLException ignore ) {
-					System.out.println("erreur close");
-		            /* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
-		        }
-		}
-		
-		
-	}
+	
 	public static void main(String[] zero) {
-		//Serveur.getPersonne("Sylvinho09");
-		StaticMethodForBDD.getPersonne("Sylvinho09");
+		
         ServerSocket socketserver;
         Socket socketduserveur;
-
+        SingletonConnectionForBDD ConnectionBDD=SingletonConnectionForBDD.getInstance();
+       
+         String url = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
+        
+    	/*String utilisateur = "root";
+    	String motDePasse = "ffry6by6";/**/
+    	String utilisateur = "Indianapaul";
+    	String motDePasse = "w223fgh52ty001jq";/**/
+        ConnectionBDD.OuvertureConnexion(url, utilisateur, motDePasse);
+        ConnectionBDD.ajoutClient("Paul", "dfs", "18", "m", "indianapaul", "mdp");
+      //  ConnectionBDD.AddReseaux("testReseau", "Description", "Ville", "all", "indianapaul");
         try {
-
             socketserver = new ServerSocket(); // ne pas spécifier de port car
             // sinon le bind échoue
 
@@ -154,12 +112,9 @@ public class Serveur {
                      * on vérifie dans la bdd la correspondance identifiant-mdp
                      **/
                     
-                    String reponse=StaticMethodForBDD.LoginPasswordValidation(id, mdp);
-                    out.println(reponse.trim());
-                    out.flush();
-                   
-
-                   
+                    int reponse=ConnectionBDD.LoginPasswordValidation(id, mdp);
+                    out.println(reponse);
+                    out.flush();                 
                   
 
                 }
@@ -203,7 +158,7 @@ public class Serveur {
                         // formbuffer.clear();
                         System.out.println("données reçues :" + form.toString());
 
-                        String resultat=StaticMethodForBDD.ajoutClient(form.prenom, form.nom, form.age, form.ville, form.identifiant, form.mdp);
+                        int resultat=ConnectionBDD.ajoutClient(form.prenom, form.nom, form.age, form.ville, form.identifiant, form.mdp);
                         out.println(resultat); //ajoutClient retourne Ok ou Error;
                         out.flush();
 
@@ -285,9 +240,9 @@ public class Serveur {
                         System.out.println("affichage mdp: "+form.mdp);
 
 
-                        String result = StaticMethodForBDD.ajoutCommercant(form.adresseServeur, form.nom, form.domaines, form.ville, form.identifiant, form.mdp);
+                        int result = ConnectionBDD.ajoutCommercant(form.adresseServeur, form.nom, form.domaines, form.ville, form.identifiant, form.mdp);
                         System.out.println("Valeur de result :"+result);
-                        out.println(result.trim());
+                        out.println(result);
                         out.flush();
 
                     } catch (ArrayIndexOutOfBoundsException e) {
