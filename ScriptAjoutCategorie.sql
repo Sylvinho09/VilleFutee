@@ -1,0 +1,1 @@
+Insert into dbvillefutee.categorie values ('Automobile'),('Supermarché'),('Pharmacie'),('Multimédia');

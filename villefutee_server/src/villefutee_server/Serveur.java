@@ -20,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 
 public class Serveur {
@@ -31,15 +32,18 @@ public class Serveur {
         Socket socketduserveur;
         SingletonConnectionForBDD ConnectionBDD=SingletonConnectionForBDD.getInstance();
        
-         String url = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
+         String url = "jdbc:mysql://localhost:3306/dbVilleFutee?useSSL=false";
         
     	/*String utilisateur = "root";
     	String motDePasse = "ffry6by6";/**/
     	String utilisateur = "Indianapaul";
     	String motDePasse = "w223fgh52ty001jq";/**/
+    	Vector<String> Cat=new Vector<String>();
+    	Cat.addElement("Automobile");Cat.addElement("Supermarch�");
         ConnectionBDD.OuvertureConnexion(url, utilisateur, motDePasse);
         ConnectionBDD.ajoutClient("Paul", "dfs", "18", "m", "indianapaul", "mdp");
-      //  ConnectionBDD.AddReseaux("testReseau", "Description", "Ville", "all", "indianapaul");
+        
+        ConnectionBDD.AddReseaux("testReseau", "Description", "Ville", "all", "indianapaul",Cat);
         try {
             socketserver = new ServerSocket(); // ne pas spécifier de port car
             // sinon le bind échoue

@@ -236,25 +236,32 @@ public class SingletonConnectionForBDD {
 	 * @param idUtilisateurChef
 	 * @return 1 si le reseaux à été ajouter 0,si une erreur,-1 si erreur Attribut PolitiqueJoin,-2 Si MySQLIntegrityConstraintViolationException,-3 si SQLException
 	 */
-	public int AddReseaux(String nomReseaux,String Description,String Ville,String PolitiqueJoin,String idUtilisateurChef){
+	public int AddReseaux(String nomReseaux,String Description,String Ville,String PolitiqueJoin,String idUtilisateurChef,Vector<String> Categorie){
 		if(PolitiqueJoin.equals("all")||PolitiqueJoin.equals("ask")||PolitiqueJoin.equals("invit_only")){
 			try {
 				Statement statement = connexion.createStatement();
 				/* Exï¿½cution d'une requï¿½te de lecture */
 
 				if (( statement.executeUpdate("INSERT INTO Reseau (Nom_reseaux, Description, Ville, Politique_join,Utilisateur_chef)"
-						+ "VALUES ('" + nomReseaux + "','" + Description + "','" + Ville + "','" + PolitiqueJoin + "','"+idUtilisateurChef+"');")) == 0) {
+						+ "VALUES ('" + nomReseaux + "','" + Description + "','" + Ville + "','" + PolitiqueJoin + "','"+idUtilisateurChef+"');",Statement.RETURN_GENERATED_KEYS)) == 0) {
 					return 0;
 				}
 				ResultSet Rstest= statement.getGeneratedKeys();
 				int idReseau =0;
 				while (Rstest.next()) {
-					idReseau = Rstest.getInt("idReseau");	
+					idReseau = Rstest.getInt("GENERATED_KEY");
 					System.out.println("IdReseau " + idReseau);
 				}
 				if (( statement.executeUpdate("INSERT INTO Utilisateur_has_Reseau (Utilisateur_identifiant, Reseau_IdReseau)"
 						+ "VALUES ('" + idUtilisateurChef + "','"+idReseau+"');")) == 0) {
 					return 0;
+				}
+				
+				for(String Cat : Categorie){
+					if (( statement.executeUpdate("INSERT INTO Reseau_has_Categorie (Reseau_IdReseau, categorie_name)"
+							+ "VALUES ('" + idReseau + "','"+Cat+"');")) == 0) {
+						return 0;
+					}
 				}
 			}
 			catch (MySQLIntegrityConstraintViolationException e) {
