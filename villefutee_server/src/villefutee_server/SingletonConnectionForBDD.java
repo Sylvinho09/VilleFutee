@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
@@ -77,7 +78,7 @@ public class SingletonConnectionForBDD {
 	 * 
 	 * @param identifiant
 	 * @param mdp
-	 * @return 1 si les identifiant sont bons, 0 si c'est faux ,-1 si la connexion n'a pas été faite, -2 si il y a une erreur sql
+	 * @return 1 si les identifiant sont bons, 0 si c'est faux ,-1 si la connexion n'a pas ï¿½tï¿½ faite, -2 si il y a une erreur sql
 	 */
 
 	public int LoginPasswordValidation(String identifiant, String mdp) {
@@ -200,15 +201,15 @@ public class SingletonConnectionForBDD {
 				return 0;
 			}
 			for (String dom : domaines) {
-				int index = 0;
+				String nomCate="";
 				ResultSet result = statement
-						.executeQuery("Select categorie_id from categorie WHERE name='" + dom + "';");
+						.executeQuery("Select name from categorie WHERE name='" + dom + "';");
 				while (result.next()) {
-					index = result.getInt("categorie_id");
+					nom = result.getString("name");
 				}
 				if ((statement.executeUpdate(
-						"INSERT INTO Commercant_has_categorie(Commercant_identifiant, categorie_categorie_id)"
-								+ "VALUES ('" + identifiant + "','" + index + "');")) == 0) {
+						"INSERT INTO Commercant_has_categorie(Commercant_identifiant, categorie_name)"
+								+ "VALUES ('" + identifiant + "','" + nomCate + "');")) == 0) {
 					return 0;
 				}
 			}
@@ -234,7 +235,7 @@ public class SingletonConnectionForBDD {
 	 * @param Ville
 	 * @param PolitiqueJoin
 	 * @param idUtilisateurChef
-	 * @return 1 si le reseaux à été ajouter 0,si une erreur,-1 si erreur Attribut PolitiqueJoin,-2 Si MySQLIntegrityConstraintViolationException,-3 si SQLException
+	 * @return 1 si le reseaux ï¿½ ï¿½tï¿½ ajouter 0,si une erreur,-1 si erreur Attribut PolitiqueJoin,-2 Si MySQLIntegrityConstraintViolationException,-3 si SQLException
 	 */
 	public int AddReseaux(String nomReseaux,String Description,String Ville,String PolitiqueJoin,String idUtilisateurChef,Vector<String> Categorie){
 		if(PolitiqueJoin.equals("all")||PolitiqueJoin.equals("ask")||PolitiqueJoin.equals("invit_only")){
@@ -303,6 +304,133 @@ public class SingletonConnectionForBDD {
 			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
 		} 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+/******* Retourner les infos relatives au client ou commercant quand il se connecte *******/
+	
+	public UserInformations getInfos(int ClientOuCommercant, String identifiant)
+	{
+		
+		UserInformations userInf = new UserInformations();
+		
+			String retour = "No";
+			try {
+		
+
+				/* Crï¿½ation de l'objet gï¿½rant les requï¿½tes */
+				Statement statement = connexion.createStatement();
+				/* Exï¿½cution d'une requï¿½te de lecture */
+				ResultSet resultat = statement
+						.executeQuery("SELECT ville, DateCompte  FROM Utilisateur where identifiant='" + identifiant + "';");
+
+				/* Rï¿½cupï¿½ration des donnï¿½es du rï¿½sultat de la requï¿½te de lecture */
+				while (resultat.next()) {
+
+					
+					userInf.setVille(resultat.getString("ville"));
+					userInf.setDateCompte(resultat.getDate("DateCompte").toString());
+					
+
+				}
+				
+				resultat = statement
+						.executeQuery("SELECT Age, nom, prenom, Politique_notifs  FROM Personne where identifiant='" + identifiant + "';");
+
+				/* Rï¿½cupï¿½ration des donnï¿½es du rï¿½sultat de la requï¿½te de lecture */
+				while (resultat.next()) {
+
+				userInf.setAge(resultat.getString("Age"));
+				userInf.setNom(resultat.getString("nom"));
+				userInf.setPrenom(resultat.getString("prenom"));
+				userInf.setPolitique_notif(resultat.getString("Politique_notifs"));
+					
+
+				}
+				
+				Vector<String> categ= new Vector<String>();
+				resultat = statement
+						.executeQuery("SELECT categorie_name  FROM Personne_has_categorie where Personne_identifiant='" + identifiant + "';");
+
+				/* Rï¿½cupï¿½ration des donnï¿½es du rï¿½sultat de la requï¿½te de lecture */
+				while (resultat.next()) {
+					/*ResultSet resultat2 = statement.executeQuery("Select name FROM categorie where categorie_id='"+resultat.getInt("categorie_categorie_id")+"';");
+					categ.add(resultat2.getString("name"));*/
+					categ.add(resultat.getString("categorie_name"));
+					
+					
+				}
+				userInf.setCategories_pref(categ);
+				
+				Hashtable<Integer, Vector<String>> reseaux_list= new Hashtable<Integer, Vector<String>>();
+				//Vector<Vector<String>> reseaux = new Vector<Vector<String>>();
+				
+				resultat = statement
+						.executeQuery("SELECT Reseau_idReseau FROM Utilisateur_has_Reseau where Utilisateur_identifiant='" + identifiant + "';");
+
+				/* Rï¿½cupï¿½ration des donnï¿½es du rï¿½sultat de la requï¿½te de lecture */
+				while (resultat.next()) {
+					Vector<String> reseau= new Vector<String>();
+					ResultSet resultat2 = statement.executeQuery("SELECT idReseau, Nom_Reseaux, Description, Ville, Politique_join FROM Reseau WHERE idReseau='"+resultat.getInt("Reseau_idReseau")+"';");
+					int idReseau= resultat2.getInt("idReseau");
+					String nom_reseau= resultat2.getString("Nom_Reseaux");
+					String description = resultat2.getString("Description");
+					String ville= resultat2.getString("Ville");
+					String politique_join= resultat2.getString("Politique_join");
+					reseau.addElement(description);
+					reseau.addElement(ville);
+					reseau.addElement(politique_join);
+					
+					reseaux_list.put(idReseau, reseau);
+				}
+				
+				userInf.setListe_reseaux(reseaux_list);	
+				
+				
+				/** ne pas oublier d'ajouter les cancel **/
+				/** ajout maintenant de la liste des notifs**/
+				
+					
+					
+					
+				
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("erreur sql");
+
+				/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			} finally {
+				if (connexion != null)
+					try {
+						/* Fermeture de la connexion */
+						connexion.close();
+					} catch (SQLException ignore) {
+						System.out.println("erreur close");
+						/*
+						 * Si une erreur survient lors de la fermeture, il suffit de
+						 * l'ignorer.
+						 */
+					}
+
+			}
+		
+		return userInf;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
