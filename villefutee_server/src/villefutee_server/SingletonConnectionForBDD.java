@@ -156,7 +156,9 @@ public class SingletonConnectionForBDD {
 			return 1;
 
 		} catch (MySQLIntegrityConstraintViolationException e) {
+			System.out.println("Identifiant utilisateur existe déjà.");
 			e.printStackTrace();
+			
 			return -1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -216,7 +218,7 @@ public class SingletonConnectionForBDD {
 
 			System.out.println("Personne ajoutée avec succès.");
 		} catch (MySQLIntegrityConstraintViolationException e) {
-			System.out.println("je suis ici");
+			System.out.println("Identifiant déjà existant");
 			e.printStackTrace();
 			return -1;
 		} catch (SQLException e) {
@@ -391,6 +393,45 @@ public class SingletonConnectionForBDD {
 				
 				userInf.setListe_reseaux(reseaux_list);	
 				
+				
+			 Hashtable <String, Vector<Vector<String>>> notif_by_categ = new Hashtable<String, Vector<Vector<String>>>();
+			 Vector<Vector<String>> oneCategNotif= new Vector<Vector<String>>();
+			 
+			 resultat = statement.executeQuery("SELECT Commercant_identifiant, Date, Texte, multimedia, Reseau_idReseau, categorie_name from Personne_has_notification,"
+			 		+ "Notification WHERE Personne_identifiant ='"+identifiant+"' and Notification_id_notif=id_notif");
+			 
+			 while(resultat.next())
+			 {
+				 Vector<String> notif = new Vector<String>();
+				 
+				 ResultSet resultat2 = statement.executeQuery("SELECT nom_magasin, Adresse from Commercant, Notification WHERE identifiant='"+resultat.getString("identifiant")+"';");
+				 notif.add(resultat2.getString("nom_magasin"));
+				 notif.addElement(resultat2.getString("Adresse"));
+				 
+				 notif.add(resultat.getDate("Date").toString());
+				 
+				 notif.add(resultat.getString("Texte"));
+				 
+				 notif.add(resultat.getString("multimedia"));
+				 
+				 resultat2 = statement.executeQuery("SELECT Nom_Reseaux, Description, Ville from Reseau WHERE idReseau='"+resultat.getInt("Reseau_idReseau")+"';");
+				 notif.add(resultat2.getString("Nom_Reseaux"));
+				 notif.add(resultat2.getString("Description"));
+				 notif.add(resultat2.getString("Ville"));
+				 
+				 String cat = resultat.getString("categorie_name");
+				 if(notif_by_categ.get(cat)==null)
+				 {
+					 oneCategNotif.add(notif);
+					 notif_by_categ.put(cat, oneCategNotif);
+				 }
+				
+				 else notif_by_categ.get(cat).add(notif);
+				 
+				 
+				
+			 }
+
 				
 				/** ne pas oublier d'ajouter les cancel **/
 				/** ajout maintenant de la liste des notifs**/

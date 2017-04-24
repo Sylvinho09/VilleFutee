@@ -34,16 +34,24 @@ public class Serveur {
        
          String url = "jdbc:mysql://localhost:3306/dbVilleFutee?useSSL=false";
         
-    	/*String utilisateur = "root";
+    	String utilisateur = "root";
     	String motDePasse = "ffry6by6";/**/
-    	String utilisateur = "Indianapaul";
+    	/*String utilisateur = "Indianapaul";
     	String motDePasse = "w223fgh52ty001jq";/**/
     	Vector<String> Cat=new Vector<String>();
-    	Cat.addElement("Automobile");Cat.addElement("Supermarch�");
+    	Cat.addElement("Automobile");Cat.addElement("Supermarch�");
         ConnectionBDD.OuvertureConnexion(url, utilisateur, motDePasse);
-        ConnectionBDD.ajoutClient("Paul", "dfs", "18", "m", "indianapaul", "mdp");
+        //ConnectionBDD.ajoutClient("Paul", "dfs", "18", "m", "indianapaul", "mdp");
+        ConnectionBDD.ajoutClient("Sylvain", "Utzel", "22", "Montpellier", "Sylvinho09", "ffry6by6");
+        ConnectionBDD.LoginPasswordValidation("Sylvinho09", "ffry6yb6");
         
-        ConnectionBDD.AddReseaux("testReseau", "Description", "Ville", "all", "indianapaul",Cat);
+        Vector<String> adresse = new Vector<String>();
+        adresse.add("4C");adresse.add("avenue");adresse.add("de");adresse.add("la");adresse.add("Halte");
+        Vector<String> domaines = new Vector<String>();
+        domaines.add("Supermarché"); domaines.addElement("Pharmacie");
+        ConnectionBDD.ajoutCommercant(adresse, "Carrefour", domaines, "Montpellier", "Carrouf34", "ffry6by6");
+        
+       // ConnectionBDD.AddReseaux("testReseau", "Description", "Ville", "all", "indianapaul",Cat);
         try {
             socketserver = new ServerSocket(); // ne pas spécifier de port car
             // sinon le bind échoue
@@ -58,7 +66,7 @@ public class Serveur {
 
                 System.out.println("Un client s'est connecté");
                 PrintWriter out = new PrintWriter(socketduserveur.getOutputStream());
-
+                
                 BufferedReader in = new BufferedReader(new InputStreamReader(socketduserveur.getInputStream()));
 
                 /**

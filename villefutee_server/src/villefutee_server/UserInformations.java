@@ -22,7 +22,7 @@ public class UserInformations {
 
 	
 	//Clé= catégorie, Vector<String> = toutes les notifs
-	private Hashtable <String, Vector<String>> notif_by_categ = new Hashtable<String, Vector<String>>();
+	private Hashtable <String, Vector<Vector<String>>> notif_by_categ = new Hashtable<String, Vector<Vector<String>>>();
 
 	public UserInformations() {
 		
@@ -70,7 +70,7 @@ public class UserInformations {
 		this.categories_pref = categories_pref;
 	}
 
-	public void setNotif_by_categ(Hashtable<String, Vector<String>> notif_by_categ) {
+	public void setNotif_by_categ(Hashtable<String, Vector<Vector<String>>> notif_by_categ) {
 		this.notif_by_categ = notif_by_categ;
 	}
 	
