@@ -266,7 +266,38 @@ public class Serveur {
 
 
                 }
+                
+                else if(extract.trim().equals("getInfos"))
+                {
+                	System.out.println("message reçu du commerçant qui veut créer un compte");
+                	/*** commercant ou client en 1er, identifiant ensuite ***/
+                    char[] userAsk = new char[35];
+                    
+                    int message_lengthCreate = 0;
+                    do {
+                        message_lengthCreate = in.read(userAsk, 0, 35);
+                        System.out.println("ici");
+
+                    } while (message_lengthCreate == 1);
+                    System.out.println("valeur read " + message_lengthCreate);
+                    String valueAsk = new String(userAsk);
+
+                    System.out.println("données recues: " + valueAsk.trim());
+                    String[] datas = userAsk.toString().trim().split("\\s+");
+                    UserInformations infos;
+                   if((infos =ConnectionBDD.getInfos(Integer.parseInt(datas[0]), datas[1].trim()))==null)
+                   {
+                	   out.println("Error");
+                   }
+                   else out.println(infos);
+                   out.flush();
+                   
+                    
+
+                }
             }
+            
+            
 
         } catch (IOException e) {
 
