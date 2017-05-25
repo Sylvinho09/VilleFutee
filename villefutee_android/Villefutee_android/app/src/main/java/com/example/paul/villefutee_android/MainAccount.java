@@ -36,6 +36,9 @@ public class MainAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_account);
+
+
+
         final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final FrameLayout fm = (FrameLayout) findViewById(R.id.nav_view);
         final FrameLayout fm2 = (FrameLayout) findViewById(R.id.nav_viewright);
