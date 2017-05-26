@@ -23,7 +23,7 @@ public class ConnexionPage extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.connexion_page);
 
         final SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
@@ -37,12 +37,13 @@ public class ConnexionPage extends AppCompatActivity {
 
 
 
+
         }
         else {
             Toast.makeText(getApplicationContext(), "Vous n'avez pas de session en cours. Veuillez vous connecter ou créer un compte.", Toast.LENGTH_LONG).show();
 
 
-            setContentView(R.layout.connexion_page);
+
             Button valider = (Button) findViewById(R.id.button);
 
             TextView inscription = (TextView) findViewById(R.id.textView3);
@@ -95,10 +96,12 @@ public class ConnexionPage extends AppCompatActivity {
                                                    System.out.println("Dans le main Thread " + result); /** Résultat bien reçu ! **/
                                                    if (result == 49) {//car la repré hexadécimale de 1 est 49, il faut ajouter 48 aux chiffres pour obtenir leur valeur hexa
                                                        Intent myintent = new Intent(getApplicationContext(), MainAccount.class);
+                                                       myintent.putExtra("id", getId);
                                                        startActivity(myintent);
                                                        Toast.makeText(getApplicationContext(), "Ajout de log ok dans sharedpreferences.", Toast.LENGTH_LONG).show();
                                                        SharedPreferences.Editor editor = sharedPref.edit();
-                                                       editor.putInt("Log".trim(), 1);
+                                                       /** ne pas oublier de decommenter plus tard**/
+                                                      // editor.putInt("Log".trim(), 1);
                                                        editor.commit();
 
                                                    } else {

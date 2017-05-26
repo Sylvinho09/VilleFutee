@@ -99,7 +99,7 @@ public class SingletonConnectionForBDD {
 				String idUtilisateur = resultat.getString("identifiant");
 				String mdp2 = resultat.getString("mdp");
 				System.out.println("Utilisateur " + idUtilisateur + " " + mdp);
-				if (idUtilisateur.trim().equals(identifiant) && mdp2.trim().equals(mdp)) {
+				if (idUtilisateur.trim().equals(identifiant.trim()) && mdp2.trim().equals(mdp.trim())) {
 					return 1;
 				}
 			}
@@ -339,7 +339,7 @@ public class SingletonConnectionForBDD {
 			if (ClientOuCommercant == 0) // C'est une client qui veut ses infos
 			{
 				ClientInformations clientInf = new ClientInformations();
-
+				System.out.println("je suis dans la fonction");
 				/* Cr�ation de l'objet g�rant les requ�tes */
 
 				/* Ex�cution d'une requ�te de lecture */
@@ -584,20 +584,20 @@ public class SingletonConnectionForBDD {
 			return null;
 
 			/* G�rer les �ventuelles erreurs ici */
-		} finally {
+		} /*finally {
 			if (connexion != null)
-				try {
+				try {*/
 					/* Fermeture de la connexion */
-					connexion.close();
+					/*connexion.close();
 				} catch (SQLException ignore) {
 					System.out.println("erreur close");
 					/*
 					 * Si une erreur survient lors de la fermeture, il suffit de
 					 * l'ignorer.
 					 */
-				}
+				//}
 
-		}
+		//}
 
 	}
 

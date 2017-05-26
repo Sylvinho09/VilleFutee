@@ -15,8 +15,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Text;
-
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import com.example.paul.villefutee_android.multispinner.multispinnerListener;
@@ -84,7 +82,7 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
                     ms.setVisibility(View.INVISIBLE);
 
 
-                    TextView tprenom = (TextView) findViewById(R.id.textViewPrenom);
+                    TextView tprenom = (TextView) findViewById(R.id.textViewDescription);
                     tprenom.setText("Prénom");
                     TextView tage = (TextView) findViewById(R.id.textViewAge);
                     tage.setText("Age");
@@ -116,7 +114,7 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
 
 
 
-                    TextView tprenom = (TextView) findViewById(R.id.textViewPrenom);
+                    TextView tprenom = (TextView) findViewById(R.id.textViewDescription);
 
                     tprenom.setText("Adresse");
                     //EditText eprenom = (EditText) findViewById(R.id.editTextPrenom);

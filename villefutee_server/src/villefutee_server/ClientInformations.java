@@ -25,4 +25,24 @@ public class ClientInformations extends UserInformations
 		this.politique_notif = politique_notif;
 	}
 
+	public String getNom() {
+		return nom;
+	}
+
+	public String getPrenom() {
+		return prenom;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public String getPolitique_notif() {
+		return politique_notif;
+	}
+
+	public String toString()
+	{
+		return nom+" "+prenom+" "+age+" "+politique_notif;
+	}
 }

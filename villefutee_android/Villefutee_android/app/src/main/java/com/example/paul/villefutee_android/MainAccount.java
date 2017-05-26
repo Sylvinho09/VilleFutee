@@ -13,13 +13,13 @@ import android.widget.Button;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.content.Context;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageView;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.graphics.Bitmap;
-import java.io.FileNotFoundException;
+
+import com.example.paul.villefutee_android.villefutee_server.ClientInformations;
+
+import java.util.concurrent.ExecutionException;
+import android.widget.TextView;
 
 
 public class MainAccount extends AppCompatActivity {
@@ -30,14 +30,31 @@ public class MainAccount extends AppCompatActivity {
     /** liste des produits préférés (stockés dans un fichier qui doit être lu ou créé dans le onCreate **/
     private String[] produitsPrefs;
     static final int PRODUCT_CHOICE =1; /** identifiant de l'intent généré **/
-
+    ClientInformations ci;
     ImageView targetImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_account);
 
+        try {
 
+            String id =getIntent().getStringExtra("id");
+            System.out.println("valeur identifiant donnée: "+id);
+            ci = (ClientInformations) new GetInfosUser().execute(id).get();
+
+
+            Toast.makeText(getApplicationContext(), "Données du client bien recues "+ci.getAge()+ " "+ci.getNom()+" "+ci.getPrenom(), Toast.LENGTH_LONG).show();
+            for(String categ : ci.getCategories())
+            {
+                Toast.makeText(getApplicationContext(), categ, Toast.LENGTH_LONG).show();
+
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final FrameLayout fm = (FrameLayout) findViewById(R.id.nav_view);
@@ -86,6 +103,16 @@ public class MainAccount extends AppCompatActivity {
         buttonright.setMinimumHeight(screenHeight/7);
         buttonright.setScaleY((float) 1.5);
         buttonright.setScaleX((float)1.1);
+
+        /** Ajuqtement de la photo de profil **/
+        //ImageView picture= (ImageView) findViewById(R.id.imageView2);
+        //picture.setMinimumWidth((int) (screenWidth/(2)));
+        //picture.setMinimumHeight((int)(screenHeight /(3)));
+       // picture.setScaleX(4);
+        //picture.setScaleY(4);
+
+        TextView description= (TextView)findViewById(R.id.textViewDescription);
+        description.setText(ci.getPrenom()+" "+ci.getNom()+" "+ci.getAge()+" ans, de "+ci.getVille());
 
 
        /** Onclick du bouton gauche **/

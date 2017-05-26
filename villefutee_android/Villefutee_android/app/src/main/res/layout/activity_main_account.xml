@@ -52,23 +52,41 @@
              android:layout_alignParentLeft="true"
              android:layout_alignParentStart="true" />
 
-         <ImageView
-             android:id="@+id/imageView"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignParentTop="true"
-             android:layout_centerHorizontal="true"
-             android:layout_marginTop="175dp"
-            />
+
 
          <Button
              android:id="@+id/button2"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:text="Éditer mon profil"
+             android:layout_marginBottom="86dp"
              android:layout_above="@+id/button3"
-             android:layout_centerHorizontal="true"
-             android:layout_marginBottom="114dp" />
+             android:layout_centerHorizontal="true" />
+
+         <TextView
+             android:id="@+id/textViewDescription"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentLeft="true"
+             android:layout_alignParentStart="true"
+             android:layout_alignParentTop="true"
+             android:layout_marginLeft="21dp"
+             android:layout_marginStart="21dp"
+             android:layout_marginTop="19dp"
+             android:text="TextView" />
+
+         <!--<ImageView
+             android:id="@+id/imageView2"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_above="@+id/button2"
+             android:layout_alignLeft="@+id/button3"
+             android:layout_alignStart="@+id/button3"
+             android:layout_marginBottom="83dp"
+             android:scaleType="fitXY"
+             android:scaleX="4"
+             android:scaleY="4"
+             app:srcCompat="@mipmap/profilepicture" />-->
 
          <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
 

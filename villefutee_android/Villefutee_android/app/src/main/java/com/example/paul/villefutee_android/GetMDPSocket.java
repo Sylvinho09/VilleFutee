@@ -19,11 +19,7 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, Integer> {
     String id;
     String mdp;
 
-    GetMDPSocket()
-    {
-        this.id=id;
-        this.mdp=mdp;
-    }
+
 
     @Override
     protected Integer doInBackground(IdMdpClass... params) {
@@ -35,7 +31,7 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, Integer> {
             //System.out.println("ici : "+InetAddress.getLocalHost() + "ici "+InetAddress.getLocalHost().getHostAddress());
             System.out.println("valeur: "+params[0].id+ " "+params[0].mdp);
 
-                socket = new Socket("10.135.57.106", 8050);
+                socket = new Socket("192.168.1.26", 8050);
                 //StaticSocket.setSocket(socket2);
                 //socket = StaticSocket.getSocket();
 

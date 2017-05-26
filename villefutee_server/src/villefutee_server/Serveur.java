@@ -6,6 +6,8 @@ package villefutee_server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -20,6 +22,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Hashtable;
 import java.util.Vector;
 
 
@@ -68,6 +71,9 @@ public class Serveur {
                 PrintWriter out = new PrintWriter(socketduserveur.getOutputStream());
                 
                 BufferedReader in = new BufferedReader(new InputStreamReader(socketduserveur.getInputStream()));
+               
+               
+
 
                 /**
                  * On va maintenant se mettre en réception pour savoir ce que
@@ -75,7 +81,7 @@ public class Serveur {
                  **/
                 System.out.println("je me mets en réception de la demande");
 
-                char[] recep = new char[7]; /**idMdp, Create, Get...*/
+                char[] recep = new char[8]; /**idMdp, Create, Get...*/
 
                 int message_length = in.read(recep);
 
@@ -269,7 +275,7 @@ public class Serveur {
                 
                 else if(extract.trim().equals("getInfos"))
                 {
-                	System.out.println("message reçu du commerçant qui veut créer un compte");
+                	System.out.println("message reçu du commerçant qui veut obtenir ses infos");
                 	/*** commercant ou client en 1er, identifiant ensuite ***/
                     char[] userAsk = new char[35];
                     
@@ -283,20 +289,73 @@ public class Serveur {
                     String valueAsk = new String(userAsk);
 
                     System.out.println("données recues: " + valueAsk.trim());
-                    String[] datas = userAsk.toString().trim().split("\\s+");
-                    UserInformations infos;
-                   if((infos =ConnectionBDD.getInfos(Integer.parseInt(datas[0]), datas[1].trim()))==null)
+                    String[] datas = valueAsk.toString().trim().split("\\s+");
+                    ClientInformations infosClient;
+                    CommercantInformations infosCom;
+                    if(datas[0].trim().equals("0"))
+                    {
+                    	System.out.println("je suis dans le 0");
+                   if((infosClient =(ClientInformations) ConnectionBDD.getInfos(0, datas[1].trim()))==null)
                    {
                 	   out.println("Error");
                    }
-                   else out.println(infos);
-                   out.flush();
+                   else
+                   {
+                	   
+                	   
+                	   ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream()); 
+                	   	   os.writeObject(infosClient.getPrenom());
+                	   	   out.flush();
+                	   	   os.writeObject(infosClient.getNom());
+                	   	   out.flush();
+                	   	   os.writeObject(infosClient.getAge());
+                	   	   out.flush();
+                	   	
+                    	   os.writeObject(infosClient.getDateCompte());
+                    	   out.flush();
+                    	   os.writeObject(infosClient.getVille());
+                    	   out.flush();
+                    	   os.writeObject(infosClient.getPolitique_notif());
+                    	   out.flush();
+                    	   
+                    	   
+                     	   /*ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream()); */
+                     	   
+                    	   Vector<String> cat= new Vector<String>();
+                    	   cat.add("Pharmacie");
+                    	   os.writeObject(cat);
+                    	   os.flush();
+                    	   Vector<String> a= new Vector<String>();
+                    	   a.add("allo");
+                    	   os.writeObject(new Hashtable<Integer, Vector<String>>().put(0, a));
+                    	   os.flush();
+                    	   os.writeObject(infosClient.getNotif_by_categ());
+                    	   os.flush();
+                    	   
+                    	 
+                    	   
+                           
+                   }
+                    } 
+                   else if((infosCom =(CommercantInformations)ConnectionBDD.getInfos(1, datas[1].trim()))==null)
+                   {
+                	   out.println("Error");
+                   }
+                   
+                	  // ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream());
+                	  // System.out.println("finiiiii");
+                	   //System.out.println(infos.toString());
+                 //os.writeObject(infos);
+                // os.flush();
+                	   
+                       
+                   
                    
                     
 
                 }
             }
-            
+           
             
 
         } catch (IOException e) {

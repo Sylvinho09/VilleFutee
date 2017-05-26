@@ -18,7 +18,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="71dp"
-        android:id="@+id/textViewPrenom"
+        android:id="@+id/textViewDescription"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -39,9 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp"
         android:id="@+id/textViewNom"
-        android:layout_below="@+id/textViewPrenom"
-        android:layout_alignLeft="@+id/textViewPrenom"
-        android:layout_alignStart="@+id/textViewPrenom" />
+        android:layout_below="@+id/textViewDescription"
+        android:layout_alignLeft="@+id/textViewDescription"
+        android:layout_alignStart="@+id/textViewDescription" />
 
     <TextView
         android:text="Mot de passe"
@@ -107,8 +107,8 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editTextPrenom"
-        android:layout_alignBaseline="@+id/textViewPrenom"
-        android:layout_alignBottom="@+id/textViewPrenom"
+        android:layout_alignBaseline="@+id/textViewDescription"
+        android:layout_alignBottom="@+id/textViewDescription"
         android:layout_toRightOf="@+id/textViewId"
         android:layout_toEndOf="@+id/textViewId" />
 

@@ -1,14 +1,11 @@
 package villefutee_server;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Vector;
 
-public class UserInformations {
+public class UserInformations implements Serializable{
 	
 	//L'identifiant sera gardé lors de la co, pas besoin de l'envoyer 
 	private String dateCompte;
@@ -33,6 +30,30 @@ public class UserInformations {
 	}
 
 	
+
+	public Vector<String> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Vector<String> categories) {
+		this.categories = categories;
+	}
+
+	public String getDateCompte() {
+		return dateCompte;
+	}
+
+	public String getVille() {
+		return ville;
+	}
+
+	public Hashtable<Integer, Vector<String>> getListe_reseaux() {
+		return liste_reseaux;
+	}
+
+	public Hashtable<String, Vector<Vector<String>>> getNotif_by_categ() {
+		return notif_by_categ;
+	}
 
 	public void setDateCompte(String dateCompte) {
 		this.dateCompte = dateCompte;
