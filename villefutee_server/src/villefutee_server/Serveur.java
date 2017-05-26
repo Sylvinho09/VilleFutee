@@ -46,7 +46,7 @@ public class Serveur {
         ConnectionBDD.OuvertureConnexion(url, utilisateur, motDePasse);
         //ConnectionBDD.ajoutClient("Paul", "dfs", "18", "m", "indianapaul", "mdp");
         ConnectionBDD.ajoutClient("Sylvain", "Utzel", "22", "Montpellier", "Sylvinho09", "ffry6by6");
-        ConnectionBDD.LoginPasswordValidation("Sylvinho09", "ffry6yb6");
+        ConnectionBDD.LoginPasswordValidation(0, "Sylvinho09", "ffry6yb6");
         
         Vector<String> adresse = new Vector<String>();
         adresse.add("4C");adresse.add("avenue");adresse.add("de");adresse.add("la");adresse.add("Halte");
@@ -68,8 +68,8 @@ public class Serveur {
                 socketduserveur = socketserver.accept();
 
                 System.out.println("Un client s'est connecté");
-                PrintWriter out = new PrintWriter(socketduserveur.getOutputStream());
-                
+               // PrintWriter out = new PrintWriter(socketduserveur.getOutputStream());
+                ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream());
                 BufferedReader in = new BufferedReader(new InputStreamReader(socketduserveur.getInputStream()));
                
                
@@ -93,7 +93,7 @@ public class Serveur {
 
                 if (extract.trim().equals("idMdp")) {
                     System.out.println("dans le equals");
-                    char[] buffer = new char[60];
+                    char[] buffer = new char[61];
 
 					/*
 					 * IMPORTANT : ne pas redéclarer la ligne en dessous, en
@@ -110,17 +110,20 @@ public class Serveur {
 
                     // int x = Character.getNumericValue(buffer.get()); dans le
                     // cas où on doit recevoir un entier
+                    int clientouco=-1;
                     String id = "";
                     String mdp = "";
+                    
                     int chx = 0;
                     String valueCo = new String(buffer);
 
                     String[] idmdp = valueCo.toString().trim().split("\\s");
 
-                    System.out.println("affichage id et mdp: " + idmdp[0] + " " + idmdp[1]);
+                    System.out.println("affichage clientouco et id et mdp: " + idmdp[0] + " " + idmdp[1]+" "+idmdp[2]);
 
-                    id = idmdp[0];
-                    mdp = idmdp[1];
+                    clientouco= Integer.parseInt(idmdp[0]);
+                    id = idmdp[1];
+                    mdp = idmdp[2]; 
 
                     System.out.println(" Identifiant " + id + " Mdp " + mdp);
 
@@ -130,9 +133,10 @@ public class Serveur {
                      * on vérifie dans la bdd la correspondance identifiant-mdp
                      **/
                     
-                    int reponse=ConnectionBDD.LoginPasswordValidation(id, mdp);
-                    out.println(reponse);
-                    out.flush();                 
+                    int reponse=ConnectionBDD.LoginPasswordValidation(clientouco, id, mdp);
+                    os.writeObject(reponse);
+                    os.flush();   
+                    
                   
 
                 }
@@ -177,15 +181,15 @@ public class Serveur {
                         System.out.println("données reçues :" + form.toString());
 
                         int resultat=ConnectionBDD.ajoutClient(form.prenom, form.nom, form.age, form.ville, form.identifiant, form.mdp);
-                        out.println(resultat); //ajoutClient retourne Ok ou Error;
-                        out.flush();
+                        os.writeObject(resultat); //ajoutClient retourne Ok ou Error;
+                        os.flush();
 
                         // On ajoute maintenant ces données dans la base de
                         // données
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println("dans le catch");
-                        out.println("Error");
-                        out.flush();
+                        os.writeObject(-3);
+                        os.flush();
                     }
 
                 }
@@ -260,13 +264,13 @@ public class Serveur {
 
                         int result = ConnectionBDD.ajoutCommercant(form.adresseServeur, form.nom, form.domaines, form.ville, form.identifiant, form.mdp);
                         System.out.println("Valeur de result :"+result);
-                        out.println(result);
-                        out.flush();
+                        os.writeObject(result);
+                        os.flush();
 
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println("dans le catch");
-                        out.println("Error");
-                        out.flush();
+                        os.writeObject(-3);
+                        os.flush();
                     }
 
 
@@ -297,26 +301,26 @@ public class Serveur {
                     	System.out.println("je suis dans le 0");
                    if((infosClient =(ClientInformations) ConnectionBDD.getInfos(0, datas[1].trim()))==null)
                    {
-                	   out.println("Error");
+                	   os.writeObject("Error");
                    }
                    else
                    {
                 	   
                 	   
-                	   ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream()); 
+                	   
                 	   	   os.writeObject(infosClient.getPrenom());
-                	   	   out.flush();
+                	   	   os.flush();
                 	   	   os.writeObject(infosClient.getNom());
-                	   	   out.flush();
+                	   	   os.flush();
                 	   	   os.writeObject(infosClient.getAge());
-                	   	   out.flush();
+                	   	   os.flush();
                 	   	
                     	   os.writeObject(infosClient.getDateCompte());
-                    	   out.flush();
+                    	   os.flush();
                     	   os.writeObject(infosClient.getVille());
-                    	   out.flush();
+                    	   os.flush();
                     	   os.writeObject(infosClient.getPolitique_notif());
-                    	   out.flush();
+                    	   os.flush();
                     	   
                     	   
                      	   /*ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream()); */
@@ -339,7 +343,7 @@ public class Serveur {
                     } 
                    else if((infosCom =(CommercantInformations)ConnectionBDD.getInfos(1, datas[1].trim()))==null)
                    {
-                	   out.println("Error");
+                	   os.writeObject("Error");
                    }
                    
                 	  // ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream());

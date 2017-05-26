@@ -82,7 +82,7 @@ public class SingletonConnectionForBDD {
 	 *         connexion n'a pas �t� faite, -2 si il y a une erreur sql
 	 */
 
-	public int LoginPasswordValidation(String identifiant, String mdp) {
+	public int LoginPasswordValidation(int clientouco, String identifiant, String mdp) {
 		int retour = 0;
 		if (connexion == null) {
 			return -1;
@@ -91,8 +91,10 @@ public class SingletonConnectionForBDD {
 			/* Cr�ation de l'objet g�rant les requ�tes */
 			Statement statement = connexion.createStatement();
 			/* Ex�cution d'une requ�te de lecture */
+			if(clientouco==0)
+			{
 			ResultSet resultat = statement
-					.executeQuery("SELECT *  FROM Utilisateur where identifiant='" + identifiant + "';");
+					.executeQuery("SELECT *  FROM Utilisateur, Personne where Utilisateur.identifiant=Personne.identifiant AND Utilisateur.identifiant='" + identifiant + "' ;");
 
 			/* R�cup�ration des donn�es du r�sultat de la requ�te de lecture */
 			while (resultat.next()) {
@@ -104,6 +106,25 @@ public class SingletonConnectionForBDD {
 				}
 			}
 			return 0;
+			}
+			else
+			{
+				ResultSet resultat = statement
+						.executeQuery("SELECT *  FROM Utilisateur, Commercant where Utilisateur.identifiant=Commercant.identifiant AND Utilisateur.identifiant='" + identifiant + "' ;");
+
+				/* R�cup�ration des donn�es du r�sultat de la requ�te de lecture */
+				while (resultat.next()) {
+					String idUtilisateur = resultat.getString("identifiant");
+					String mdp2 = resultat.getString("mdp");
+					System.out.println("Utilisateur " + idUtilisateur + " " + mdp);
+					if (idUtilisateur.trim().equals(identifiant.trim()) && mdp2.trim().equals(mdp.trim())) {
+						return 1;
+					}
+				}
+				return -1;
+				
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("erreur sql");
@@ -159,11 +180,11 @@ public class SingletonConnectionForBDD {
 			System.out.println("Identifiant utilisateur existe déjà.");
 			e.printStackTrace();
 
-			return -1;
+			return 2;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("erreur sql");
-			return -2;
+			return 3;
 			/* G�rer les �ventuelles erreurs ici */
 		}
 	}
@@ -219,11 +240,11 @@ public class SingletonConnectionForBDD {
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			System.out.println("Identifiant déjà existant");
 			e.printStackTrace();
-			return -1;
+			return 2;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("erreur sql");
-			return -2;
+			return 3;
 			/* G�rer les �ventuelles erreurs ici */
 		}
 		return 1;

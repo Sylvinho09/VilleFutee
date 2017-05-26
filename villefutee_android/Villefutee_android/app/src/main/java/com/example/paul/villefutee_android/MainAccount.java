@@ -1,6 +1,8 @@
 package com.example.paul.villefutee_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -36,10 +38,12 @@ public class MainAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_account);
-
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         try {
 
-            String id =getIntent().getStringExtra("id");
+           // String id =getIntent().getStringExtra("id"); // fait plutot avec SharedPreference car si l'user se connecte directement il ne rentre pas ses logs
+
+            String id=sharedPref.getString("id".trim(), "NotFound"); //NotFound est la valeur par défaut si rien n'est trouvé
             System.out.println("valeur identifiant donnée: "+id);
             ci = (ClientInformations) new GetInfosUser().execute(id).get();
 
@@ -114,6 +118,21 @@ public class MainAccount extends AppCompatActivity {
         TextView description= (TextView)findViewById(R.id.textViewDescription);
         description.setText(ci.getPrenom()+" "+ci.getNom()+" "+ci.getAge()+" ans, de "+ci.getVille());
 
+        Button buttonDeco = (Button) findViewById(R.id.buttonDeconnexion);
+
+        buttonDeco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                 editor.putInt("Log".trim(), -1);
+                editor.commit();
+                Intent myIntent= new Intent(getApplicationContext(), ConnexionPage.class);
+                startActivity(myIntent);
+                finish();
+            }
+        });
 
        /** Onclick du bouton gauche **/
         //mDrawerLayout.closeDrawer(mDrawerLayout);

@@ -32,7 +32,7 @@ public class GetInfosUser extends AsyncTask<String, Void, UserInformations> {
 
         try {
             socket = new Socket("192.168.1.26", 8050);
-            System.out.println("je suis dans le getUserInfo");
+
             out = new PrintWriter(socket.getOutputStream());
 
             System.out.println("je suis dans le getUserInfo");

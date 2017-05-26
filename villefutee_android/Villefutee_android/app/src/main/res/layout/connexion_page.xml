@@ -49,4 +49,23 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <CheckBox
+        android:id="@+id/checkBoxCoClient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_alignStart="@+id/editText2"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="48dp"
+        android:text="Client" />
+
+    <CheckBox
+        android:id="@+id/checkBoxCoCom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/checkBoxCoClient"
+        android:layout_alignEnd="@+id/editText2"
+        android:layout_alignRight="@+id/editText2"
+        android:text="Commerçant" />
+
 </RelativeLayout>

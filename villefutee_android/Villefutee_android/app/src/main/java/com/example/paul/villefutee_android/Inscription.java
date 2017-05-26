@@ -241,7 +241,7 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
 
                     try
                     {
-                        String result = "";
+                        int result = -4;
                         Formulaire datas= new Formulaire();
                         if(client.isChecked()) {
                             int intage = Integer.parseInt(age);
@@ -253,23 +253,25 @@ public class Inscription extends AppCompatActivity implements AdapterView.OnItem
                                 Toast.makeText(getApplicationContext(), "Vous devez avoir entre 14 et 120 ans!", Toast.LENGTH_LONG).show();
                         }
                             else {
+
                             datas = new Formulaire(spacePrenomOuAdresse, nom, selectedItems, ville, identifiant, mdp);
                             System.out.println("données passées au thread commercant: " + datas.toString());
                             System.out.println("Formulaire va lancer le thread commercant");
                         }
                             result = new EnvoiForm().execute(datas).get();
-                            if(result.trim().equals("Ok")) {
+                            if(result==1) {
                                 Toast.makeText(getApplicationContext(), "Compte créé avec succès !", Toast.LENGTH_LONG).show();
                                 finish();
                             }
-                            else if(result.trim().equals("Error"))
-                            {
-                                Toast.makeText(getApplicationContext(), "Il y a eu une erreur. Réessayez.", Toast.LENGTH_LONG).show();
 
-                            }
-                            else if(result.trim().equals("ErrorName"))
+                            else if(result==2)
                             {
                                 Toast.makeText(getApplicationContext(), "Cet identifiant est déjà utilisé.", Toast.LENGTH_LONG).show();
+
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Il y a eu une erreur. Réessayez.", Toast.LENGTH_LONG).show();
 
                             }
 

@@ -75,6 +75,15 @@
              android:layout_marginTop="19dp"
              android:text="TextView" />
 
+         <Button
+             android:id="@+id/buttonDeconnexion"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_above="@+id/button3"
+             android:layout_centerHorizontal="true"
+             android:layout_marginBottom="22dp"
+             android:text="Me déconnecter" />
+
          <!--<ImageView
              android:id="@+id/imageView2"
              android:layout_width="wrap_content"

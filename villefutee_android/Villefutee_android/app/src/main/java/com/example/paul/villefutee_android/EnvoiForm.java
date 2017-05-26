@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.CharBuffer;
@@ -13,15 +14,16 @@ import java.nio.CharBuffer;
  * Created by sylvinho on 14/04/2017.
  */
 
-public class EnvoiForm extends AsyncTask<Formulaire, Void, String>{
+public class EnvoiForm extends AsyncTask<Formulaire, Void, Integer>{
     private Socket socket;
     private PrintWriter out;
-    private BufferedReader in;
+   // private BufferedReader in;
+    ObjectInputStream is;
 
 
 
     @Override
-    protected String doInBackground(Formulaire... params) {
+    protected Integer doInBackground(Formulaire... params) {
 
         try {
 
@@ -67,22 +69,24 @@ public class EnvoiForm extends AsyncTask<Formulaire, Void, String>{
 
 
 
+            is = new ObjectInputStream(socket.getInputStream());
+            //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+           //recuperer int  char[] reponse= new char[10];
+            int buffer =(int)is.readObject();
 
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            char[] reponse= new char[10];
-            int message_length=in.read(reponse);
-            String cvtReponse= new String(reponse).trim();
 
 
 
             System.out.println("fin");
-            System.out.println(cvtReponse);
-            return cvtReponse;
+
+            return buffer;
 
 
 
         } catch (IOException e)
         {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;

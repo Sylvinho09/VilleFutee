@@ -5,11 +5,13 @@ package com.example.paul.villefutee_android;
  */
 
 public class IdMdpClass {
+    String clientZCommercantU;
     String id;
     String mdp;
 
-    IdMdpClass(String id, String mdp)
+    IdMdpClass(String clientco, String id, String mdp)
     {
+        this.clientZCommercantU=clientco;
         this.id=id;
         this.mdp=mdp;
     }
