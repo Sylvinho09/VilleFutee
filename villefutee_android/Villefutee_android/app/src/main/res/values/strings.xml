@@ -7,9 +7,9 @@
     </string-array>
 
     <string-array name="commerces">
-        <item>Mes commerces</item>
+
         <item>Les commerces à proximité</item>
-        <item>Ajouter un commerce</item>
+
         <item>Notifications</item>
     </string-array>
 
@@ -49,4 +49,5 @@
         <item>Pharmacie</item>
         <item>Multimédia</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 </resources>

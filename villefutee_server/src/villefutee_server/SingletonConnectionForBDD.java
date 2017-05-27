@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -173,6 +174,17 @@ public class SingletonConnectionForBDD {
 			{
 				return resultat;
 			}
+			
+			if ((resultat = statement
+					.executeUpdate("INSERT INTO Personne_has_categorie(Personne_identifiant, categorie_name) VALUES ('"
+							+ identifiant+"','Automobile'),('"
+							+ identifiant+"','Multimédia'),('"
+							+ identifiant+"','Pharmacie'),('"
+							+ identifiant+"','Supermarché');")) == 0)// on choisit ville de base
+			{
+				return resultat;
+			}
+			
 			System.out.println("Personne ajoutée avec succès.");
 			return 1;
 
@@ -190,7 +202,7 @@ public class SingletonConnectionForBDD {
 	}
 
 	public int ajoutCommercant(Vector<String> adresse, String nom, Vector<String> domaines, String ville,
-			String identifiant, String mdp) {
+			String identifiant, String mdp, double latitude, double longitude) {
 		try {
 			/* Cr�ation de l'objet g�rant les requ�tes */
 			Statement statement = connexion.createStatement();
@@ -214,8 +226,8 @@ public class SingletonConnectionForBDD {
 			for (String el : adresse) {
 				stringAdresse += " " + el;
 			}
-			if ((statement.executeUpdate("INSERT INTO Commercant(identifiant, nom_Magasin, Pays, Adresse)" + "VALUES ('"
-					+ identifiant + "','" + nom + "','France','" + stringAdresse.trim() + "');")) == 0)// on
+			if ((statement.executeUpdate("INSERT INTO Commercant(identifiant, nom_Magasin, Pays, Adresse, latitude, longitude)" + "VALUES ('"
+					+ identifiant + "','" + nom + "','France','" + stringAdresse.trim() + "','"+latitude+"','"+longitude+"');")) == 0)// on
 			// choisit
 			// ville
 			// de
@@ -231,7 +243,7 @@ public class SingletonConnectionForBDD {
 				}
 				if ((statement
 						.executeUpdate("INSERT INTO Commercant_has_categorie(Commercant_identifiant, categorie_name)"
-								+ "VALUES ('" + identifiant + "','" + nomCate + "');")) == 0) {
+								+ "VALUES ('" + identifiant + "','" + nom + "');")) == 0) {
 					return 0;
 				}
 			}
@@ -620,6 +632,46 @@ public class SingletonConnectionForBDD {
 
 		//}
 
+	}
+
+	public ArrayList<String> getNearestComs(double latitude, double longitude) {
+		try {
+			ArrayList<String> coms= new ArrayList<String>();
+			double latMin= latitude-1;
+			double latMax= latitude+1;
+			double longMin= longitude-1;
+			double longMax= longitude+1;
+
+			Statement statement = connexion.createStatement();
+			Statement statement2 = connexion.createStatement();
+			
+			ResultSet resultat= statement.executeQuery("SELECT identifiant, nom_magasin, Adresse, latitude, longitude FROM Commercant"
+					+ " WHERE (latitude BETWEEN "+latMin+ "AND +" +latMax+") AND (longitude BETWEEN "+longMin+ " AND "+longMax+");");
+			while(resultat.next())
+			{
+				coms.add(resultat.getString("nom_magasin"));
+				coms.add(resultat.getString("Adresse"));
+				String lat= String.valueOf(resultat.getDouble("latitude"));
+				String lng = String.valueOf(resultat.getDouble("longitude"));
+				ResultSet resultat2= statement2.executeQuery("SELECT categorie_name from Commercant_has_categorie WHERE Commercant_identifiant='"+resultat.getString("identifiant")+"';");
+			String categs="";
+			while(resultat2.next())
+			{
+				categs+=resultat2.getString("categorie_name")+" ";
+			}
+			coms.add(categs);
+			coms.add(lat.trim());
+			coms.add(lng.trim());
+
+			}
+			
+			return coms;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }

@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS `dbVilleFutee`.`Commercant` (
   `Pays` VARCHAR(30) NULL,
   `Adresse` VARCHAR(45) NULL,
   `Info_supp` VARCHAR(30) NULL DEFAULT NULL,
+  `latitude` float8 NULL,
+  `longitude` float8 NULL,
   PRIMARY KEY (`identifiant`),
   CONSTRAINT `identifiant`
     FOREIGN KEY (`identifiant`)

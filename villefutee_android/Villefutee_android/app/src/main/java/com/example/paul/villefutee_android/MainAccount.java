@@ -1,12 +1,20 @@
 package com.example.paul.villefutee_android;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -19,41 +27,55 @@ import android.widget.Toast;
 import android.widget.ImageView;
 
 import com.example.paul.villefutee_android.villefutee_server.ClientInformations;
+import com.example.paul.villefutee_android.villefutee_server.LatitudeLongitude;
 
+import java.security.Provider;
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+
 import android.widget.TextView;
+import android.location.LocationManager;
 
 
-public class MainAccount extends AppCompatActivity {
+public class MainAccount extends AppCompatActivity implements LocationListener{
     private String[] mesItems;
     private String[] mesCommerces;
     private ListView reseauList;
     private ListView reseauListRight;
     /** liste des produits préférés (stockés dans un fichier qui doit être lu ou créé dans le onCreate **/
     private String[] produitsPrefs;
-    static final int PRODUCT_CHOICE =1; /** identifiant de l'intent généré **/
+    static final int PRODUCT_CHOICE = 1;
+    /** identifiant de l'intent généré **/
     ClientInformations ci;
     ImageView targetImage;
+    LocationManager locationManager;
+    private  Criteria criteria;
+    private String bestProvider;
+    LatitudeLongitude ll;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_account);
+        locationManager = (LocationManager)  this.getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         try {
 
-           // String id =getIntent().getStringExtra("id"); // fait plutot avec SharedPreference car si l'user se connecte directement il ne rentre pas ses logs
+            // String id =getIntent().getStringExtra("id"); // fait plutot avec SharedPreference car si l'user se connecte directement il ne rentre pas ses logs
 
-            String id=sharedPref.getString("id".trim(), "NotFound"); //NotFound est la valeur par défaut si rien n'est trouvé
-            System.out.println("valeur identifiant donnée: "+id);
+            String id = sharedPref.getString("id".trim(), "NotFound"); //NotFound est la valeur par défaut si rien n'est trouvé
+            System.out.println("valeur identifiant donnée: " + id);
             ci = (ClientInformations) new GetInfosUser().execute(id).get();
 
 
-            Toast.makeText(getApplicationContext(), "Données du client bien recues "+ci.getAge()+ " "+ci.getNom()+" "+ci.getPrenom(), Toast.LENGTH_LONG).show();
-            for(String categ : ci.getCategories())
+            Toast.makeText(getApplicationContext(), "Données du client bien recues " + ci.getAge() + " " + ci.getNom() + " " + ci.getPrenom(), Toast.LENGTH_LONG).show();
+           /* for(String categ : ci.getCategories())
             {
                 Toast.makeText(getApplicationContext(), categ, Toast.LENGTH_LONG).show();
 
-            }
+            }*/
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -64,9 +86,9 @@ public class MainAccount extends AppCompatActivity {
         final FrameLayout fm = (FrameLayout) findViewById(R.id.nav_view);
         final FrameLayout fm2 = (FrameLayout) findViewById(R.id.nav_viewright);
 
-        Button buttonEditProfile = (Button)findViewById(R.id.button2);
+        Button buttonEditProfile = (Button) findViewById(R.id.button2);
 
-       // targetImage = (ImageView)findViewById(R.id.imageView);
+        // targetImage = (ImageView)findViewById(R.id.imageView);
 
 
         //ImageButton navLauncher = (ImageButton) findViewById(R.id.imageButton3);
@@ -76,7 +98,96 @@ public class MainAccount extends AppCompatActivity {
         reseauList = (ListView) findViewById(R.id.left_drawer);
         reseauList.setAdapter(new ArrayAdapter<String>(this, R.layout.navline, mesItems));
         reseauListRight = (ListView) findViewById(R.id.left_drawer2);
-        reseauListRight.setAdapter(new ArrayAdapter<String>(this, R.layout.navline, mesCommerces));
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.navline, mesCommerces);
+        reseauListRight.setAdapter(adapter);
+        reseauListRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Toast.makeText(getApplicationContext(), view.getId() + " " + position + " " + id, Toast.LENGTH_LONG).show();
+                if (position == 0) {
+
+
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    System.out.println("DANS LE CHECK1");
+
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(MainAccount.this,
+                                Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            System.out.println("DANS LE CHECK2");
+
+
+                            // Show an explanation to the user *asynchronously* -- don't block
+                            // this thread waiting for the user's response! After the user
+                            // sees the explanation, try again to request the permission.
+
+                        }else {
+
+                            //ActivityCompat.requestPermissions(MainAccount.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                            // No explanation needed, we can request the permission.
+                            System.out.println("DANS LE CHECK3");
+                            /*ActivityCompat.requestPermissions(MainAccount.this,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    1);*/ //la constante est utilisée pour attacher un requestPermission particulier
+                            //à un onRequestPermissionResult (resultCode)
+
+                            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                            // app-defined int constant. The callback method gets the
+                            // result of the request.
+                        }
+                        System.out.println("DANS LE CHECK4");
+
+                        return;
+                    }
+
+                    System.out.println("DANS LE CHECK5");
+
+
+                    String locationProvider = LocationManager.GPS_PROVIDER;
+
+                    Location location = locationManager.getLastKnownLocation(locationProvider);
+
+                    //Ci-dessous très important, sinon la carte ne fonctionne qu'une fois car le requestLocationUpdates ne s'effectue plus, surement car c'est a cause de l'emulateur
+                        if(location!=null)
+                        {
+                            Double latitude = location.getLatitude();
+                            Double longitude = location.getLongitude();
+                            ll= new LatitudeLongitude(latitude, longitude);
+                            ArrayList<String> proxCom= null;
+                            try {
+                                proxCom = new GetProxCom().execute(ll).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            Intent map= new Intent(getApplicationContext(), MapsActivity.class);
+                            map.putStringArrayListExtra("Com", proxCom);
+                            startActivity(map);
+
+                        }
+                    else {
+
+                            criteria = new Criteria();
+                            bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+                            Toast.makeText(getApplicationContext(), "Lancement location updates", Toast.LENGTH_LONG);
+                            locationManager.requestLocationUpdates(bestProvider, 1000, 0, MainAccount.this);
+                        }
+
+
+
+                }
+            }
+        });
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE); // the results will be higher than using the activity context object or the getWindowManager() shortcut
@@ -118,6 +229,14 @@ public class MainAccount extends AppCompatActivity {
         TextView description= (TextView)findViewById(R.id.textViewDescription);
         description.setText(ci.getPrenom()+" "+ci.getNom()+" "+ci.getAge()+" ans, de "+ci.getVille());
 
+        TextView interest= (TextView) findViewById(R.id.textViewInterest);
+        String str= "Intéressé par ";
+
+        for(String i : ci.getCategories())
+        {
+        str+=i+" ";
+        }
+        interest.setText(str);
         Button buttonDeco = (Button) findViewById(R.id.buttonDeconnexion);
 
         buttonDeco.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +297,10 @@ public class MainAccount extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "cliqué ", Toast.LENGTH_LONG).show();*/
 
             }});
+
     }
+
+
 
 
     @Override
@@ -210,4 +332,41 @@ public class MainAccount extends AppCompatActivity {
         }*/
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        //locationManager.removeUpdates(this);
+
+
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        System.out.println("mes coordonnées aaaaaaaaaaaa: "+latitude+ " "+longitude);
+        ll= new LatitudeLongitude(latitude, longitude);
+        ArrayList<String> proxCom= null;
+        try {
+            proxCom = new GetProxCom().execute(ll).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Intent map= new Intent(getApplicationContext(), MapsActivity.class);
+        map.putStringArrayListExtra("Com", proxCom);
+        startActivity(map);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

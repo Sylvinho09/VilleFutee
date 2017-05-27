@@ -84,6 +84,16 @@
              android:layout_marginBottom="22dp"
              android:text="Me déconnecter" />
 
+         <TextView
+             android:id="@+id/textViewInterest"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignLeft="@+id/textViewDescription"
+             android:layout_alignStart="@+id/textViewDescription"
+             android:layout_below="@+id/textViewDescription"
+             android:layout_marginTop="35dp"
+             android:text="TextView" />
+
          <!--<ImageView
              android:id="@+id/imageView2"
              android:layout_width="wrap_content"

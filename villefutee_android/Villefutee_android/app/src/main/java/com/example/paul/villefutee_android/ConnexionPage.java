@@ -38,6 +38,7 @@ public class ConnexionPage extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Vous avez déjà une connexion en cours, ouverture de votre page d'accueil.",Toast.LENGTH_LONG).show();
             Intent myintent = new Intent(getApplicationContext(), MainAccount.class);
             startActivity(myintent);
+            finish();
 
 
 

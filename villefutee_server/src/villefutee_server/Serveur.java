@@ -4,6 +4,7 @@ package villefutee_server;
  * A lancer autre part ***
  */
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -22,9 +23,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
-
+import java.util.Random;
 
 public class Serveur {
 
@@ -50,9 +52,19 @@ public class Serveur {
         
         Vector<String> adresse = new Vector<String>();
         adresse.add("4C");adresse.add("avenue");adresse.add("de");adresse.add("la");adresse.add("Halte");
+        Vector<String> adresse2 = new Vector<String>();
+        adresse2.add("20");adresse2.add("Rue");adresse2.add("de");adresse2.add("Bône");
+        Vector<String> adresse3 = new Vector<String>();
+        adresse3.add("8C");adresse3.add("Impasse");adresse3.add("des");adresse3.add("Cerisiers");
+        
         Vector<String> domaines = new Vector<String>();
         domaines.add("Supermarché"); domaines.addElement("Pharmacie");
-        ConnectionBDD.ajoutCommercant(adresse, "Carrefour", domaines, "Montpellier", "Carrouf34", "ffry6by6");
+        //mettre entre 42.8 et 43.2 et entre 1.4 et 1.8
+        ConnectionBDD.ajoutCommercant(adresse, "Carrefour", domaines, "Montpellier", "Carrouf34", "ffry6by6", 43.8d, 3.9d);
+        ConnectionBDD.ajoutCommercant(adresse2, "Carrefour", domaines, "Pamiers", "Carrouf09", "ffry6by6", 42.867d, 1.756d);
+        ConnectionBDD.ajoutCommercant(adresse3, "Intermarche", domaines, "Verniolle", "Inter09", "ffry6by6", 43.127d, 1.486d);
+
+
         
        // ConnectionBDD.AddReseaux("testReseau", "Description", "Ville", "all", "indianapaul",Cat);
         try {
@@ -205,6 +217,7 @@ public class Serveur {
                      * inscription d'affilée, le read renvoie 1 je ne sais pas
                      * pourquoi
                      */
+                    
                     int message_lengthCreate = 0;
                     do {
                         message_lengthCreate = in.read(formbufferCommercant, 0, 210);
@@ -261,8 +274,21 @@ public class Serveur {
                         form.mdp=datas[j+2].trim();
                         System.out.println("affichage mdp: "+form.mdp);
 
+                        Random fRandom = new Random();
+                        double minLat=43.5d;
+                        double maxLat=44d;
+                        double minLong=3.5d;
+                        double maxLong=4d;
+                        double longitude;
+                        double latitude;
+                        Random rand = new Random();
+                        
+                        longitude = rand.nextDouble() * (maxLong - minLong) + minLong;
+                        latitude = rand.nextDouble() * (maxLat - minLat) + minLat;
+                        
+                      System.out.println("valeurs latitude et longitude: "+latitude + " "+longitude);
 
-                        int result = ConnectionBDD.ajoutCommercant(form.adresseServeur, form.nom, form.domaines, form.ville, form.identifiant, form.mdp);
+                        int result = ConnectionBDD.ajoutCommercant(form.adresseServeur, form.nom, form.domaines, form.ville, form.identifiant, form.mdp, latitude, longitude);
                         System.out.println("Valeur de result :"+result);
                         os.writeObject(result);
                         os.flush();
@@ -279,7 +305,7 @@ public class Serveur {
                 
                 else if(extract.trim().equals("getInfos"))
                 {
-                	System.out.println("message reçu du commerçant qui veut obtenir ses infos");
+                	System.out.println("message reçu d'un utilisateur qui veut obtenir ses infos");
                 	/*** commercant ou client en 1er, identifiant ensuite ***/
                     char[] userAsk = new char[35];
                     
@@ -325,13 +351,11 @@ public class Serveur {
                     	   
                      	   /*ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream()); */
                      	   
-                    	   Vector<String> cat= new Vector<String>();
-                    	   cat.add("Pharmacie");
-                    	   os.writeObject(cat);
+                    	   
+                    	   os.writeObject(infosClient.getCategories());
                     	   os.flush();
-                    	   Vector<String> a= new Vector<String>();
-                    	   a.add("allo");
-                    	   os.writeObject(new Hashtable<Integer, Vector<String>>().put(0, a));
+                    	   
+                    	   os.writeObject(infosClient.getListe_reseaux());
                     	   os.flush();
                     	   os.writeObject(infosClient.getNotif_by_categ());
                     	   os.flush();
@@ -346,18 +370,51 @@ public class Serveur {
                 	   os.writeObject("Error");
                    }
                    
-                	  // ObjectOutputStream os = new ObjectOutputStream(socketduserveur.getOutputStream());
-                	  // System.out.println("finiiiii");
-                	   //System.out.println(infos.toString());
-                 //os.writeObject(infos);
-                // os.flush();
-                	   
-                       
-                   
-                   
-                    
+                  
 
                 }
+                else if(extract.trim().equals("ProxComs".trim()))
+                {
+                	char[] coordonnees= new char[50];
+
+                    
+                    int message_lengthCreate = 0;
+                    do {
+                        message_lengthCreate = in.read(coordonnees, 0, 50);
+                        System.out.println("ici coordonnees");
+
+                    } while (message_lengthCreate == 1);
+                    System.out.println("valeur read " + message_lengthCreate);
+                    String valueCo = new String(coordonnees);
+
+                    System.out.println("données recues: " + valueCo.trim());
+                    String[] datas = valueCo.toString().trim().split("\\s+");
+                	
+                    double latitude = Double.parseDouble(datas[0].trim());
+                    double longitude = Double.parseDouble(datas[1].trim());
+                    
+                    //le premier read ne lit rien, le second lit les 2 valeurs???
+                	/*in.read(latitude);
+                	String slatitude= new String(latitude);
+                	System.out.println("double recu: "+slatitude);
+                	in.read(latitude);
+                	slatitude= new String(latitude);
+                	System.out.println("double recu: "+slatitude);
+                	
+                	double dlatitude = Double.parseDouble(slatitude);
+                	
+                	char[] longitude= new char[35];
+                	
+                	in.read(longitude);
+                	String slongitude= new String(longitude);
+                	double dlongitude = Double.parseDouble(slongitude);*/
+                	
+                	/** Utilisation de ArrayList car c'est ce qu'on passera dans le intent cote client**/
+                	ArrayList<String> proxComs= ConnectionBDD.getNearestComs(latitude, longitude);
+                	os.writeObject(proxComs);
+                	
+                }
+                
             }
            
             
