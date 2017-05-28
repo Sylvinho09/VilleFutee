@@ -13,6 +13,11 @@
         <item>Notifications</item>
     </string-array>
 
+    <string-array name="commerce_commercant">
+    <item> Les concurrents à proximité </item>
+        <item> Envoyer une promotion, offre...</item>
+    </string-array>
+
     <string-array name="produits">
         <item> Patates</item>
         <item> Courgettes</item>
@@ -49,5 +54,15 @@
         <item>Pharmacie</item>
         <item>Multimédia</item>
     </string-array>
+
+    <string-array name="notifs_categ">
+        <item>Choix de la catégorie de la notification</item>
+        <item>Multimédia</item>
+        <item>Pharmacie</item>
+        <item>Supermarché</item>
+        <item>Automobile</item>
+    </string-array>
+
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main_account_commercant">MainAccountCommercant</string>
 </resources>

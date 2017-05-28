@@ -31,11 +31,12 @@ public class ConnexionPage extends AppCompatActivity {
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         int logged = sharedPref.getInt("Log".trim(), -1); //retournera -1 si non trouvé
+        int loggedCom = sharedPref.getInt("LogCom".trim(),-1);//retournera -1 si non trouvé
         if(logged==1)
         {
 
 
-            Toast.makeText(getApplicationContext(),"Vous avez déjà une connexion en cours, ouverture de votre page d'accueil.",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Vous avez déjà une connexion client en cours, ouverture de votre page d'accueil.",Toast.LENGTH_LONG).show();
             Intent myintent = new Intent(getApplicationContext(), MainAccount.class);
             startActivity(myintent);
             finish();
@@ -43,6 +44,13 @@ public class ConnexionPage extends AppCompatActivity {
 
 
 
+        }
+        else if(loggedCom==1)
+        {
+            Toast.makeText(getApplicationContext(),"Vous avez déjà une connexion commerçant en cours, ouverture de votre page d'accueil.",Toast.LENGTH_LONG).show();
+            Intent myintent = new Intent(getApplicationContext(), MainAccountCommercant.class);
+            startActivity(myintent);
+            finish();
         }
         else {
             Toast.makeText(getApplicationContext(), "Vous n'avez pas de session en cours. Veuillez vous connecter ou créer un compte.", Toast.LENGTH_LONG).show();
@@ -125,6 +133,8 @@ public class ConnexionPage extends AppCompatActivity {
                                                            System.out.println("je lance le thread");
                                                            result = new GetMDPSocket().execute(idmdp).get();
                                                        }
+
+
                                                        else if(commercant.isChecked())
                                                        {
                                                            IdMdpClass idmdp = new IdMdpClass("1".trim(),getId, getMdp);
@@ -150,9 +160,16 @@ public class ConnexionPage extends AppCompatActivity {
                                                        editor.commit();
                                                        startActivity(myintent);
                                                    }
-                                                   else if(result==1 && commercant.isChecked()) {
-                                                       Toast.makeText(getApplicationContext(), "Un compte est associé à ces logs mais l'interface commercant n'est aps encore réalisée."+result, Toast.LENGTH_LONG).show();
 
+                                                   /** ici: activité commercant **/
+                                                   else if(result==1 && commercant.isChecked()) {
+                                                       Toast.makeText(getApplicationContext(), "Ajout de log ok dans Shared Preferences."+result, Toast.LENGTH_LONG).show();
+                                                      Intent myIntent = new Intent(getApplicationContext(), MainAccountCommercant.class);
+                                                       SharedPreferences.Editor editor = sharedPref.edit();
+                                                       editor.putString("id".trim(), getId.trim());
+                                                       editor.putInt("LogCom".trim(), 1);
+                                                       editor.commit();
+                                                       startActivity(myIntent);
 
                                                    } else if(result==0){
 

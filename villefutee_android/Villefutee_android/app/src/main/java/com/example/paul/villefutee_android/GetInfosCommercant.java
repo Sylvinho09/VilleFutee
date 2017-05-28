@@ -3,11 +3,10 @@ package com.example.paul.villefutee_android;
 import android.os.AsyncTask;
 
 import com.example.paul.villefutee_android.villefutee_server.ClientInformations;
-import com.example.paul.villefutee_android.villefutee_server.UserInformations;
+import com.example.paul.villefutee_android.villefutee_server.CommercantInformations;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -15,21 +14,18 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 /**
- * Created by sylvinho on 25/05/2017.
+ * Created by sylvinho on 28/05/2017.
  */
 
-public class GetInfosUser extends AsyncTask<String, Void, ClientInformations> {
+public class GetInfosCommercant extends AsyncTask<String, Void, CommercantInformations> {
     Socket socket;
     BufferedReader in;
     PrintWriter out;
     ObjectInputStream is;
 
-
-
     @Override
-    protected ClientInformations doInBackground(String... params) {
-
-
+    protected CommercantInformations doInBackground(String... params) {
+        PrintWriter out;
 
         try {
             socket = new Socket("172.20.10.2", 8050);
@@ -41,26 +37,23 @@ public class GetInfosUser extends AsyncTask<String, Void, ClientInformations> {
             System.out.println("je suis dans le getUserInfo");
             out.println("getInfos".trim());
             out.flush();
-            out.println("0 " + params[0].trim());
+            out.println("1 " + params[0].trim());
             out.flush();
 
-            ClientInformations ci = new ClientInformations();
+            CommercantInformations ci = new CommercantInformations();
             //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             is = new ObjectInputStream(socket.getInputStream());
 
-            ci.setPrenom((String)is.readObject());
-            ci.setNom((String)is.readObject());
-            ci.setAge((String)is.readObject());
+            ci.setNom_magasin((String)is.readObject());
+            ci.setAdresse((String)is.readObject());
             ci.setDateCompte((String)is.readObject());
             ci.setVille((String)is.readObject());
-            ci.setPolitique_notif((String)is.readObject());
-
-
             ci.setCategories((Vector<String>)is.readObject());
+
             ci.setListe_reseaux((Hashtable<Integer, Vector<String>>) is.readObject());
             ci.setNotif_by_categ((Hashtable<String, Vector<Vector<String>>>) is.readObject());
 
-            System.out.println("affichage user: " + ci.toString());
+            System.out.println("affichage commercant : " + ci.toString());
             //ClientInformations ci= (ClientInformations) is.readObject();
 
 
@@ -75,6 +68,6 @@ public class GetInfosUser extends AsyncTask<String, Void, ClientInformations> {
             e.printStackTrace();
             return null;
         }
+
     }
 }
-

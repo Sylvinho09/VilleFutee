@@ -29,7 +29,7 @@ public class EnvoiForm extends AsyncTask<Formulaire, Void, Integer>{
 
             //if (StaticSocket.getI() == 0) {
                 Socket socket;
-                socket = new Socket("192.168.1.26", 8050);
+                socket = new Socket("172.20.10.2", 8050);
                 //StaticSocket.setSocket(socket2);
                 //socket = StaticSocket.getSocket();
           //  }

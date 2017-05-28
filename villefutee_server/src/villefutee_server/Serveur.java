@@ -46,6 +46,7 @@ public class Serveur {
     	Vector<String> Cat=new Vector<String>();
     	Cat.addElement("Automobile");Cat.addElement("Supermarch�");
         ConnectionBDD.OuvertureConnexion(url, utilisateur, motDePasse);
+        ConnectionBDD.initializeCategories();
         //ConnectionBDD.ajoutClient("Paul", "dfs", "18", "m", "indianapaul", "mdp");
         ConnectionBDD.ajoutClient("Sylvain", "Utzel", "22", "Montpellier", "Sylvinho09", "ffry6by6");
         ConnectionBDD.LoginPasswordValidation(0, "Sylvinho09", "ffry6yb6");
@@ -93,7 +94,7 @@ public class Serveur {
                  **/
                 System.out.println("je me mets en réception de la demande");
 
-                char[] recep = new char[8]; /**idMdp, Create, Get...*/
+                char[] recep = new char[10]; /**idMdp, Create, Get...*/
 
                 int message_length = in.read(recep);
 
@@ -369,6 +370,38 @@ public class Serveur {
                    {
                 	   os.writeObject("Error");
                    }
+                   else
+                   {
+                	   
+                	   os.writeObject(infosCom.getNom_magasin());
+                	   os.flush();
+                	   System.out.println("Envoi des données"+infosCom.getNom_magasin());
+
+                	   os.writeObject(infosCom.getAdresse());
+                	   os.flush();
+                	   System.out.println("Envoi des données"+infosCom.getAdresse());
+
+                	   os.writeObject(infosCom.getDateCompte());
+                	   os.flush();
+                	   System.out.println("Envoi des données"+infosCom.getDateCompte());
+
+                	   os.writeObject(infosCom.getVille());
+                	   os.flush();
+                	   System.out.println("Envoi des données"+infosCom.getVille());
+
+                	   os.writeObject(infosCom.getCategories());
+                	   os.flush();
+                	   System.out.println("Envoi des données"+infosCom.getCategories());
+
+                	   os.writeObject(infosCom.getListe_reseaux());
+                	   os.flush();
+                	   System.out.println("Envoi des donnéeslast"+infosCom.getListe_reseaux());
+
+                	   os.writeObject(infosCom.getNotif_by_categ());
+                	   os.flush();
+                	   
+                	   
+                   }
                    
                   
 
@@ -412,6 +445,77 @@ public class Serveur {
                 	/** Utilisation de ArrayList car c'est ce qu'on passera dans le intent cote client**/
                 	ArrayList<String> proxComs= ConnectionBDD.getNearestComs(latitude, longitude);
                 	os.writeObject(proxComs);
+                	
+                }
+                else if(extract.trim().equals("SendNotifs".trim()))
+                {
+                	char[] idChoix= new char[300]; //sera à modifier si le commercant choisit d'envoyer à certains réseaux
+
+                    
+                    int message_lengthCreate = 0;
+                    do {
+                        message_lengthCreate = in.read(idChoix, 0, 100);
+                        System.out.println("ici coordonnees");
+
+                    } while (message_lengthCreate == 1);
+                    System.out.println("valeur read " + message_lengthCreate);
+                    String valueCo = new String(idChoix);
+
+                    System.out.println("données recues: " + valueCo.trim());
+                    String[] datas = valueCo.toString().trim().split("\\s+");
+                    
+                    String idCom= datas[0].trim();
+                    String choix = datas[1].trim();
+                    String categorie= datas[2].trim();
+                    
+                    String texte=" ";
+                    int i=3;
+                    while(!datas[i].equals("0".trim()))
+                    {
+                    	
+                    	texte +=datas[i]+" ";
+                    	i++;
+                    }
+                    System.out.println("notif ::::: "+texte);
+                    int result=0;
+                    result=ConnectionBDD.sendNotifs(idCom, choix, categorie, texte);
+                    
+                    	os.writeObject(result);
+                    
+                    		
+                }
+                else if(extract.trim().equals("GetNotifs".trim()))
+                {
+                	System.out.println("Le client veut ses notifications");
+                	
+                	char[] coordonnees= new char[80];
+
+                    
+                    int message_lengthCreate = 0;
+                    do {
+                        message_lengthCreate = in.read(coordonnees, 0, 50);
+                        System.out.println("ici coordonnees");
+
+                    } while (message_lengthCreate == 1);
+                    System.out.println("valeur read " + message_lengthCreate);
+                    String valueCo = new String(coordonnees);
+
+                    System.out.println("données recues: " + valueCo.trim());
+                    String[] datas = valueCo.toString().trim().split("\\s+");
+                	
+                    String id= datas[0].trim();
+                    double latitude = Double.parseDouble(datas[1].trim());
+                    double longitude = Double.parseDouble(datas[2].trim());
+                    
+                    Vector<String> resultat = ConnectionBDD.getNotifs(id, latitude, longitude);
+                    System.out.println("Notifs :");
+                    for(String n : resultat)
+                    {
+                    	System.out.println(n+"\n");
+                    }
+                    os.writeObject(resultat);
+                    os.flush();
+                	
                 	
                 }
                 

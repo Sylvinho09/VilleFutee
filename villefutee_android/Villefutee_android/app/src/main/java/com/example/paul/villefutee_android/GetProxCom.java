@@ -2,14 +2,11 @@ package com.example.paul.villefutee_android;
 
 import android.os.AsyncTask;
 
-import com.example.paul.villefutee_android.villefutee_server.LatitudeLongitude;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by sylvinho on 27/05/2017.
@@ -25,7 +22,7 @@ public class GetProxCom extends AsyncTask<LatitudeLongitude, Void, ArrayList<Str
     protected ArrayList<String> doInBackground(LatitudeLongitude... params) {
 
         try {
-            socket = new Socket("192.168.1.26", 8050);
+            socket = new Socket("172.20.10.2", 8050);
             out= new PrintWriter(socket.getOutputStream());
 
             is=new ObjectInputStream(socket.getInputStream());

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Indiquez la description de la notification" />
+
+    <EditText
+        android:id="@+id/editTextMaNotif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Indiquer ici"
+        android:inputType="text" />
+
+    <!--<ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_weight="1" />-->
+
+
+    <!--<com.example.paul.villefutee_android.multispinner
+        android:id="@+id/spinnerNotifs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.example.paul.villefutee_android.multispinner>-->
+
+    <Spinner
+        android:id="@+id/spinnerNotifs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/checkBoxProche"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="L'envoyer aux utilisateurs proches de moi" />
+
+    <CheckBox
+        android:id="@+id/checkBoxReseaux"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="L'envoyer à un ou des réseaux où je suis membre" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Annuler"
+            android:id="@+id/btnBtmLeft"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Envoyer"
+            android:id="@+id/btnBtmRight"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

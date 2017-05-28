@@ -22,8 +22,8 @@ public class ProductListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listviewproducts);
         Toast.makeText(this, "ICIIIII", Toast.LENGTH_LONG);
-        ListView listview = getListView();
-        String[] produits = getResources().getStringArray(R.array.produits);
+        //ListView listview = getListView();
+        produits = getResources().getStringArray(R.array.produits);
 
         setListAdapter(new ArrayAdapter<String>(this, R.layout.products, produits));
 

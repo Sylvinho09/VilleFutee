@@ -74,6 +74,20 @@ public class SingletonConnectionForBDD {
 
 	}
 
+	public void initializeCategories()
+	{
+		try {
+			Statement statement = connexion.createStatement();
+			statement.executeUpdate("Insert into categorie (name) VALUES ('Multimédia'),('Pharmacie'),('Supermarché'),('Automobile');");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	
 	/******* Validation des coordonnées rentrées pas l'utilisateur *******/
 	/**
 	 * 
@@ -170,7 +184,7 @@ public class SingletonConnectionForBDD {
 			if ((resultat = statement
 					.executeUpdate("INSERT INTO Personne(Age, identifiant, nom, prenom, Politique_notifs)" + "VALUES ('"
 							+ Integer.parseInt(age) + "','" + identifiant + "','" + nom + "','" + prenom
-							+ "','ville');")) == 0)// on choisit ville de base
+							+ "','position');")) == 0)// on choisit ville de base
 			{
 				return resultat;
 			}
@@ -368,6 +382,7 @@ public class SingletonConnectionForBDD {
 		try {
 
 			Statement statement = connexion.createStatement();
+			Statement statement2 = connexion.createStatement();
 
 			if (ClientOuCommercant == 0) // C'est une client qui veut ses infos
 			{
@@ -423,7 +438,7 @@ public class SingletonConnectionForBDD {
 					categ.add(resultat.getString("categorie_name"));
 
 				}
-				clientInf.setCategories_pref(categ);
+				clientInf.setCategories(categ);
 
 				Hashtable<Integer, Vector<String>> reseaux_list = new Hashtable<Integer, Vector<String>>();
 				// Vector<Vector<String>> reseaux = new
@@ -438,7 +453,7 @@ public class SingletonConnectionForBDD {
 				 */
 				while (resultat.next()) {
 					Vector<String> reseau = new Vector<String>();
-					ResultSet resultat2 = statement.executeQuery(
+					ResultSet resultat2 = statement2.executeQuery(
 							"SELECT idReseau, Nom_Reseaux, Description, Ville, Politique_join FROM Reseau WHERE idReseau='"
 									+ resultat.getInt("Reseau_idReseau") + "';");
 					int idReseau = resultat2.getInt("idReseau");
@@ -466,11 +481,15 @@ public class SingletonConnectionForBDD {
 				while (resultat.next()) {
 					Vector<String> notif = new Vector<String>();
 
-					ResultSet resultat2 = statement.executeQuery(
+					ResultSet resultat2 = statement2.executeQuery(
 							"SELECT nom_magasin, Adresse from Commercant, Notification WHERE identifiant='"
-									+ resultat.getString("identifiant") + "';");
+									+ resultat.getString("Commercant_identifiant") + "';");
+					
+					while(resultat2.next())
+					{
 					notif.add(resultat2.getString("nom_magasin"));
 					notif.addElement(resultat2.getString("Adresse"));
+					}
 
 					notif.add(resultat.getDate("Date").toString());
 
@@ -478,12 +497,15 @@ public class SingletonConnectionForBDD {
 
 					notif.add(resultat.getString("multimedia"));
 
-					resultat2 = statement
+					resultat2 = statement2
 							.executeQuery("SELECT Nom_Reseaux, Description, Ville from Reseau WHERE idReseau='"
 									+ resultat.getInt("Reseau_idReseau") + "';");
+					while(resultat2.next())
+					{
 					notif.add(resultat2.getString("Nom_Reseaux"));
 					notif.add(resultat2.getString("Description"));
 					notif.add(resultat2.getString("Ville"));
+					}
 
 					String cat = resultat.getString("categorie_name");
 					if (notif_by_categ.get(cat) == null) {
@@ -499,8 +521,9 @@ public class SingletonConnectionForBDD {
 				clientInf.setNotif_by_categ(notif_by_categ);
 				return clientInf;
 
-			} else {
+			} else {   /** si c'est un commercant **/
 
+				System.out.println("je suis dans get infos commercant");
 				CommercantInformations comInf = new CommercantInformations();
 				ResultSet resultat = statement.executeQuery(
 						"SELECT ville, DateCompte  FROM Utilisateur where identifiant='" + identifiant + "';");
@@ -514,23 +537,33 @@ public class SingletonConnectionForBDD {
 					comInf.setDateCompte(resultat.getDate("DateCompte").toString());
 
 				}
+				
+				/**Récupérations infos dans table commercant **/
 
+				resultat = statement
+						.executeQuery("SELECT nom_Magasin, Adresse  FROM Commercant where identifiant='"
+								+ identifiant + "';");
+				
+				while(resultat.next())
+				{
+				comInf.setNom_magasin(resultat.getString("nom_Magasin"));
+				comInf.setAdresse(resultat.getString("Adresse"));
+				}
+				
+				
 				Vector<String> categ = new Vector<String>();
 				resultat = statement
-						.executeQuery("SELECT categorie_name  FROM Personne_has_categorie where Personne_identifiant='"
+						.executeQuery("SELECT categorie_name  FROM Commercant_has_categorie where Commercant_identifiant='"
 								+ identifiant + "';");
 
 				/*
 				 * R�cup�ration des donn�es du r�sultat de la requ�te de lecture
 				 */
 				while (resultat.next()) {
-					/*
-					 * ResultSet resultat2 = statement.
-					 * executeQuery("Select name FROM categorie where categorie_id='"
-					 * +resultat.getInt("categorie_categorie_id")+"';");
-					 * categ.add(resultat2.getString("name"));
-					 */
+					
+					
 					categ.add(resultat.getString("categorie_name"));
+					comInf.setCategories(categ);
 
 				}
 				
@@ -547,7 +580,7 @@ public class SingletonConnectionForBDD {
 				 */
 				while (resultat.next()) {
 					Vector<String> reseau = new Vector<String>();
-					ResultSet resultat2 = statement.executeQuery(
+					ResultSet resultat2 = statement2.executeQuery(
 							"SELECT idReseau, Nom_Reseaux, Description, Ville, Politique_join FROM Reseau WHERE idReseau='"
 									+ resultat.getInt("Reseau_idReseau") + "';");
 					int idReseau = resultat2.getInt("idReseau");
@@ -561,7 +594,7 @@ public class SingletonConnectionForBDD {
 
 					reseaux_list.put(idReseau, reseau);
 				}
-				
+				comInf.setListe_reseaux(reseaux_list);
 				
 				/******* On récupère maintenant les notifications envoyées par le commercant ********/
 				
@@ -570,8 +603,8 @@ public class SingletonConnectionForBDD {
 
 				
 				resultat = statement.executeQuery(
-						"Select id_notif, Date, Texte, multimedia, DestinatairesNotifs, Reseau_idReseau, categorie_name"
-						+ "FROM  Notification WHERE Commercant_identifiant='"+identifiant+"';");
+						"Select id_notif, Date, Texte, multimedia, DestinataireNotifs, Reseau_idReseau, categorie_name"
+						+ " FROM  Notification WHERE Commercant_identifiant='"+identifiant+"';");
 				
 
 				while (resultat.next()) {
@@ -585,12 +618,15 @@ public class SingletonConnectionForBDD {
 
 					notif.add(resultat.getString("multimedia"));
 
-					ResultSet resultat2 = statement
+					ResultSet resultat2 = statement2
 							.executeQuery("SELECT Nom_Reseaux, Description, Ville from Reseau WHERE idReseau='"
 									+ resultat.getInt("Reseau_idReseau") + "';");
+					while(resultat2.next())
+					{
 					notif.add(resultat2.getString("Nom_Reseaux"));
 					notif.add(resultat2.getString("Description"));
 					notif.add(resultat2.getString("Ville"));
+					}
 
 					String cat = resultat.getString("categorie_name");
 					if (notif_by_categ.get(cat) == null) {
@@ -670,6 +706,107 @@ public class SingletonConnectionForBDD {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return null;
+	}
+
+	public int sendNotifs(String idCom, String choix, String categorie, String texte) {
+		
+		try {
+			Statement statement = connexion.createStatement();
+			
+
+			if(choix.equals("position".trim()))
+			{
+		System.out.println("Ajout de notifications dans la base de données pour les gens proches");
+	
+		
+		String date= FormatToday();
+			System.out.println("Insert into Notification(Commercant_identifiant, Date, Texte, DestinataireNotifs, categorie_name)"
+				+ " VALUES ('"+idCom+"','"+date+"','"+texte+"','"+choix+"','"+categorie);
+		if((statement.executeUpdate("Insert into Notification(Commercant_identifiant, Date, Texte, DestinataireNotifs, categorie_name)"
+				+ " VALUES ('"+idCom+"','"+date+"','"+texte+"','"+choix+"','"+categorie+"');"))==0)
+				{
+			System.out.println("Rien n'a été ajouté");
+			return 0; 
+			
+				}
+		System.out.println("Notification ajoutée !");
+		return 1;
+		}
+		
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
+		return 0;
+	}
+
+	public Vector<String> getNotifs(String id, double latitude, double longitude) {
+		Vector<String> notifs = new Vector<String>();
+		double latMin= latitude-1;
+		double latMax= latitude+1;
+		double longMin= longitude-1;
+		double longMax= longitude+1;
+		
+		try {
+			Statement statement = connexion.createStatement();
+			Statement statement2 = connexion.createStatement();
+
+			
+			/** On va sélectionner toutes les notifications que le client a déja vues **/
+			
+			System.out.println("Select * FROM Notification, Commercant, Personne_has_Notification "
+					+ "WHERE Personne_identifiant='"+id+"' AND Commercant_identifiant=identifiant;");
+			
+			ResultSet resultat = statement.executeQuery("Select * FROM Notification, Commercant, Personne_has_Notification "
+					+ "WHERE Personne_identifiant='"+id+"' AND id_notif=Notification_id_notif AND Commercant_identifiant=identifiant;");
+			
+			while(resultat.next())
+			{
+				System.out.println("dans le next");
+				String str=" ";
+				str+=resultat.getString("nom_Magasin")+" ("+resultat.getString("Adresse")+") vous a envoyé une notification le "+resultat.getDate("Date").toString()+" !\n";
+				str+=resultat.getString("Texte");
+				notifs.add(str);
+			}
+			
+			
+			/** Sélectionner toutes les notifs que le client n'a pas encore vues**/
+			//resultat = statement.executeQuery("Select * from Commercant");
+		
+			
+				
+				/** On sélectionne les notifications des commerces proches et pas encore dans Personne Has Notification et qui correspond aux catégpries préférées des clients**/
+				 ResultSet resultat2= statement.executeQuery("Select nom_Magasin, Adresse, Date, Texte, id_notif FROM Commercant, Notification WHERE "
+						+ "Commercant_identifiant=identifiant AND categorie_name IN (Select categorie_name FROM Personne_has_categorie "
+								+ "WHERE Personne_identifiant='"+id+"') AND id_notif NOT IN (Select Notification_id_notif from Personne_has_Notification);");
+				 while(resultat2.next())
+				 {
+					 String str="Nouvelle notification !\n";
+					 str+=resultat2.getString("nom_Magasin")+" ("+resultat2.getString("Adresse")+") vous a envoyé une notification le "+resultat2.getDate("Date").toString()+" !\n";
+						str+=resultat2.getString("Texte");
+						notifs.add(str);
+						
+					statement2.executeUpdate("INSERT INTO Personne_has_Notification (Personne_identifiant, Notification_id_notif, Envoye) VALUES "
+							+ "('"+id+"','"+resultat2.getString("id_notif")+"',1);");
+					
+
+				 }
+				 
+				 return notifs;
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		
 		return null;
 	}

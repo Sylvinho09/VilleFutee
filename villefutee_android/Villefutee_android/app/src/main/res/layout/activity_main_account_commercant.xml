@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layoutC"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <!-- The main content view -->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white">
+        <!-- background obligatoire sinon tourne au noir (juste dans le design) quand set du background du 1er imagebutton-->
+
+
+        <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/ic_launcher_commerces"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:id="@+id/button4C"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+        <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/ic_launcher_reseau2"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:id="@+id/buttonnavC"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+
+        <Button
+            android:id="@+id/button2C"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Éditer mon profil"
+            android:layout_marginBottom="39dp"
+            android:layout_above="@+id/buttonDeconnexionC"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/textViewDescriptionC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="21dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="19dp"
+            android:text="TextView" />
+
+        <Button
+            android:id="@+id/buttonDeconnexionC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Me déconnecter"
+            android:layout_above="@+id/button4C"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/textViewInterestC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="69dp"
+            android:text="TextView"
+            android:layout_below="@+id/textViewDescriptionC"
+            android:layout_alignLeft="@+id/textViewDescriptionC"
+            android:layout_alignStart="@+id/textViewDescriptionC" />
+
+        <!--<ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button2"
+            android:layout_alignLeft="@+id/button3"
+            android:layout_alignStart="@+id/button3"
+            android:layout_marginBottom="83dp"
+            android:scaleType="fitXY"
+            android:scaleX="4"
+            android:scaleY="4"
+            app:srcCompat="@mipmap/profilepicture" />-->
+
+        <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
+
+
+    </RelativeLayout>
+    <!-- The navigation drawer -->
+    <FrameLayout
+        android:id="@+id/nav_viewC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"> <!-- à mettre dans le FrameLayout car drawerLayout le considérera comme le drawer-->
+
+
+
+        <ListView android:id="@+id/left_drawerC"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="#111"/>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/nav_viewrightC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"> <!-- à mettre dans le FrameLayout car drawerLayout le considérera comme le drawer-->
+
+
+
+        <ListView android:id="@+id/left_drawer2C"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="#111"/>
+    </FrameLayout>
+</android.support.v4.widget.DrawerLayout>

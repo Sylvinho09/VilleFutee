@@ -1,6 +1,5 @@
 package com.example.paul.villefutee_android;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -25,13 +25,12 @@ import android.view.WindowManager;
 import android.content.Context;
 import android.widget.Toast;
 import android.widget.ImageView;
+import java.util.Vector;
 
 import com.example.paul.villefutee_android.villefutee_server.ClientInformations;
-import com.example.paul.villefutee_android.villefutee_server.LatitudeLongitude;
+import com.example.paul.villefutee_android.villefutee_server.PersonalizedDialog;
 
-import java.security.Provider;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
 import android.widget.TextView;
@@ -43,8 +42,6 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
     private String[] mesCommerces;
     private ListView reseauList;
     private ListView reseauListRight;
-    /** liste des produits préférés (stockés dans un fichier qui doit être lu ou créé dans le onCreate **/
-    private String[] produitsPrefs;
     static final int PRODUCT_CHOICE = 1;
     /** identifiant de l'intent généré **/
     ClientInformations ci;
@@ -53,21 +50,24 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
     private  Criteria criteria;
     private String bestProvider;
     LatitudeLongitude ll;
+    int mapOrNotif=0;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_account);
-        locationManager = (LocationManager)  this.getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        locationManager = (LocationManager)  this.getSystemService(Context.LOCATION_SERVICE);
         try {
 
             // String id =getIntent().getStringExtra("id"); // fait plutot avec SharedPreference car si l'user se connecte directement il ne rentre pas ses logs
 
             String id = sharedPref.getString("id".trim(), "NotFound"); //NotFound est la valeur par défaut si rien n'est trouvé
             System.out.println("valeur identifiant donnée: " + id);
-            ci = (ClientInformations) new GetInfosUser().execute(id).get();
+            ci = new GetInfosUser().execute(id).get();
 
 
             Toast.makeText(getApplicationContext(), "Données du client bien recues " + ci.getAge() + " " + ci.getNom() + " " + ci.getPrenom(), Toast.LENGTH_LONG).show();
@@ -112,7 +112,6 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
 
 
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    System.out.println("DANS LE CHECK1");
 
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
@@ -123,7 +122,6 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
                         // for ActivityCompat#requestPermissions for more details.
                         if (ActivityCompat.shouldShowRequestPermissionRationale(MainAccount.this,
                                 Manifest.permission.ACCESS_FINE_LOCATION)) {
-                            System.out.println("DANS LE CHECK2");
 
 
                             // Show an explanation to the user *asynchronously* -- don't block
@@ -134,7 +132,6 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
 
                             //ActivityCompat.requestPermissions(MainAccount.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                             // No explanation needed, we can request the permission.
-                            System.out.println("DANS LE CHECK3");
                             /*ActivityCompat.requestPermissions(MainAccount.this,
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     1);*/ //la constante est utilisée pour attacher un requestPermission particulier
@@ -144,18 +141,16 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
                             // app-defined int constant. The callback method gets the
                             // result of the request.
                         }
-                        System.out.println("DANS LE CHECK4");
 
                         return;
                     }
 
-                    System.out.println("DANS LE CHECK5");
 
 
                     String locationProvider = LocationManager.GPS_PROVIDER;
 
                     Location location = locationManager.getLastKnownLocation(locationProvider);
-
+                    mapOrNotif=0; // indication pour le onrequestLocation callback
                     //Ci-dessous très important, sinon la carte ne fonctionne qu'une fois car le requestLocationUpdates ne s'effectue plus, surement car c'est a cause de l'emulateur
                         if(location!=null)
                         {
@@ -185,6 +180,68 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
 
 
 
+                }
+                else if(position==1) {
+                    mapOrNotif=1; //indication pour le onRequestLocation callback
+                    String ident = sharedPref.getString("id".trim(), "NotFound"); //NotFound est la valeur par défaut si rien n'est trouvé
+
+                    Vector<String> listNotifs = new Vector<String>();
+                    String locationProvider = LocationManager.GPS_PROVIDER;
+
+                    Location location = locationManager.getLastKnownLocation(locationProvider);
+
+                    //Ci-dessous très important, sinon la carte ne fonctionne qu'une fois car le requestLocationUpdates ne s'effectue plus, surement car c'est a cause de l'emulateur
+                    if (location != null) {
+                        Double latitude = location.getLatitude();
+                        Double longitude = location.getLongitude();
+                        ll = new LatitudeLongitude(ident, latitude, longitude);
+
+
+                        try {
+                            listNotifs = new GetNotifs().execute(ll).get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                        final PersonalizedDialog dialog = new PersonalizedDialog(MainAccount.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.see_notifs);
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.setCancelable(true);
+
+                        ListView listnotifs = (ListView) dialog.findViewById(R.id.listViewSeeNotifs);
+                        ArrayList<String> list = new ArrayList<String>();
+                        for(String notif : listNotifs)
+                        {
+                            list.add(notif);
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
+                        listnotifs.setAdapter(adapter);
+
+
+                        Button btnBtmLeft = (Button) dialog.findViewById(R.id.btnBtmLeft);
+                        btnBtmLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                            }
+                        });
+                        DisplayMetrics displayMetrics = MainAccount.this.getResources().getDisplayMetrics();
+                        int dialogWidth = (int)(displayMetrics.widthPixels * 0.85);
+                        int dialogHeight = (int)(displayMetrics.heightPixels * 0.35);
+                        dialog.getWindow().setLayout(dialogWidth, dialogHeight);
+
+                        dialog.show();
+                    }
+                    else
+                    {
+                        criteria = new Criteria();
+                        bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+                        Toast.makeText(getApplicationContext(), "Lancement location updates", Toast.LENGTH_LONG);
+                        locationManager.requestLocationUpdates(bestProvider, 1000, 0, MainAccount.this);
+                    }
                 }
             }
         });
@@ -340,19 +397,68 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
 
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        System.out.println("mes coordonnées aaaaaaaaaaaa: "+latitude+ " "+longitude);
-        ll= new LatitudeLongitude(latitude, longitude);
-        ArrayList<String> proxCom= null;
-        try {
-            proxCom = new GetProxCom().execute(ll).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        //System.out.println("mes coordonnées aaaaaaaaaaaa: "+latitude+ " "+longitude);
+
+        if(mapOrNotif==0) {
+            ll= new LatitudeLongitude(latitude, longitude);
+
+            ArrayList<String> proxCom = null;
+            try {
+                proxCom = new GetProxCom().execute(ll).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            Intent map = new Intent(getApplicationContext(), MapsActivity.class);
+            map.putStringArrayListExtra("Com", proxCom);
+            startActivity(map);
         }
-        Intent map= new Intent(getApplicationContext(), MapsActivity.class);
-        map.putStringArrayListExtra("Com", proxCom);
-        startActivity(map);
+        else
+        {
+            final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+            String ident = sharedPref.getString("id".trim(), "NotFound"); //NotFound est la valeur par défaut si rien n'est trouvé
+            ll= new LatitudeLongitude(ident, latitude, longitude);
+            Vector<String> listNotifs = new Vector<String>();
+            try {
+                listNotifs = new GetNotifs().execute(ll).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            final PersonalizedDialog dialog = new PersonalizedDialog(MainAccount.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.see_notifs);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(true);
+
+            ListView listnotifs = (ListView) dialog.findViewById(R.id.listViewSeeNotifs);
+            ArrayList<String> list = new ArrayList<String>();
+            for(String notif : listNotifs)
+            {
+                list.add(notif);
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
+            listnotifs.setAdapter(adapter);
+
+
+            Button btnBtmLeft = (Button) dialog.findViewById(R.id.btnBtmLeft);
+            btnBtmLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.cancel();
+                }
+            });
+            DisplayMetrics displayMetrics = MainAccount.this.getResources().getDisplayMetrics();
+            int dialogWidth = (int)(displayMetrics.widthPixels * 0.85);
+            int dialogHeight = (int)(displayMetrics.heightPixels * 0.35);
+            dialog.getWindow().setLayout(dialogWidth, dialogHeight);
+
+            dialog.show();
+        }
     }
 
     @Override

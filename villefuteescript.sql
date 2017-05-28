@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `dbVilleFutee`.`Personne` ;
 CREATE TABLE IF NOT EXISTS `dbVilleFutee`.`Personne` (
   `Age` INT NOT NULL,
   `identifiant` VARCHAR(30) NOT NULL,
-  `Politique_notifs` ENUM('never', 'only_reseaux', 'only_categorie', 'categorie_and_reseaux', 'ville') NULL,
+  `Politique_notifs` ENUM('never', 'only_reseaux', 'only_categorie', 'categorie_and_reseaux', 'position') NULL,
   `Nom` VARCHAR(30) NULL,
   `Prenom` VARCHAR(30) NULL,
   PRIMARY KEY (`identifiant`),
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `dbVilleFutee`.`Notification` (
   `Date` DATE NULL,
   `Texte` VARCHAR(255) NULL,
   `multimedia` VARCHAR(45) NULL COMMENT 'Image/videos A voir le type\n',
-  `DestinataireNotifs` ENUM('Ville', 'Corresp_Cate', 'Reseaux', 'Reseau') NULL,
+  `DestinataireNotifs` ENUM('Position', 'Corresp_Cate', 'Reseaux', 'Reseau') NULL,
   `Reseau_idReseau` INT NULL DEFAULT NULL,
   `categorie_name` VARCHAR(255) NOT NULL,
   `id_notif` INT NOT NULL AUTO_INCREMENT,
