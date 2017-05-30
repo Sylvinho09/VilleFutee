@@ -16,7 +16,7 @@ public class UserInformations implements Serializable{
 
     private String ville;
 
-    private Hashtable<Integer, Vector<String>> liste_reseaux; //nom réseau en clé, ville et autres infos dans le vecteur
+    //private Hashtable<Integer, Vector<String>> liste_reseaux; //nom réseau en clé, ville et autres infos dans le vecteur
     private Vector<String> categories;
 
 
@@ -51,10 +51,10 @@ public class UserInformations implements Serializable{
         return ville;
     }
 
-    public Hashtable<Integer, Vector<String>> getListe_reseaux() {
+   /* public Hashtable<Integer, Vector<String>> getListe_reseaux() {
         return liste_reseaux;
     }
-
+*/
     public Hashtable<String, Vector<Vector<String>>> getNotif_by_categ() {
         return notif_by_categ;
     }
@@ -65,9 +65,9 @@ public class UserInformations implements Serializable{
 
 
 
-    public void setListe_reseaux(Hashtable<Integer, Vector<String>> liste_reseaux) {
+   /* public void setListe_reseaux(Hashtable<Integer, Vector<String>> liste_reseaux) {
         this.liste_reseaux = liste_reseaux;
-    }
+    }*/
 
     public void setCategories_pref(Vector<String> categories_pref) {
         this.categories = categories_pref;

@@ -70,7 +70,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
             ci = new GetInfosUser().execute(id).get();
 
 
-            Toast.makeText(getApplicationContext(), "Données du client bien recues " + ci.getAge() + " " + ci.getNom() + " " + ci.getPrenom(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Données du client bien recues " + ci.getAge() + " " + ci.getNom() + " " + ci.getPrenom(), Toast.LENGTH_LONG).show();
            /* for(String categ : ci.getCategories())
             {
                 Toast.makeText(getApplicationContext(), categ, Toast.LENGTH_LONG).show();
@@ -86,7 +86,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
         final FrameLayout fm = (FrameLayout) findViewById(R.id.nav_view);
         final FrameLayout fm2 = (FrameLayout) findViewById(R.id.nav_viewright);
 
-        Button buttonEditProfile = (Button) findViewById(R.id.button2);
+        //Button buttonEditProfile = (Button) findViewById(R.id.button2);
 
         // targetImage = (ImageView)findViewById(R.id.imageView);
 
@@ -97,6 +97,23 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
         mesCommerces = getResources().getStringArray(R.array.commerces);
         reseauList = (ListView) findViewById(R.id.left_drawer);
         reseauList.setAdapter(new ArrayAdapter<String>(this, R.layout.navline, mesItems));
+
+        reseauList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    Intent myintent = new Intent(getApplicationContext(), addReseau.class);
+                    myintent.putExtra("ville", ci.getVille());
+                    startActivity(myintent);
+                }
+                if(position==1){
+                    Intent myintent = new Intent(getApplicationContext(), MesReseaux.class);
+                    startActivity(myintent);
+                    String idUtilisateur =sharedPref.getString("id".trim(), "NotFound");
+                    myintent.putExtra("idutilisateur", idUtilisateur);
+                }
+            }        });
+
         reseauListRight = (ListView) findViewById(R.id.left_drawer2);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.navline, mesCommerces);
         reseauListRight.setAdapter(adapter);
@@ -104,7 +121,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(getApplicationContext(), view.getId() + " " + position + " " + id, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), view.getId() + " " + position + " " + id, Toast.LENGTH_LONG).show();
                 if (position == 0) {
 
 
@@ -165,8 +182,13 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
                             } catch (ExecutionException e) {
                                 e.printStackTrace();
                             }
+
+                            double[] posClient= new double[2];
+                            posClient[0]= latitude;
+                            posClient[1]= longitude;
                             Intent map= new Intent(getApplicationContext(), MapsActivity.class);
                             map.putStringArrayListExtra("Com", proxCom);
+                            map.putExtra("Cli", posClient);
                             startActivity(map);
 
                         }
@@ -174,7 +196,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
 
                             criteria = new Criteria();
                             bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
-                            Toast.makeText(getApplicationContext(), "Lancement location updates", Toast.LENGTH_LONG);
+                           // Toast.makeText(getApplicationContext(), "Lancement location updates", Toast.LENGTH_LONG);
                             locationManager.requestLocationUpdates(bestProvider, 1000, 0, MainAccount.this);
                         }
 
@@ -199,6 +221,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
 
                         try {
                             listNotifs = new GetNotifs().execute(ll).get();
+
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         } catch (ExecutionException e) {
@@ -239,7 +262,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
                     {
                         criteria = new Criteria();
                         bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
-                        Toast.makeText(getApplicationContext(), "Lancement location updates", Toast.LENGTH_LONG);
+                        //Toast.makeText(getApplicationContext(), "Lancement location updates", Toast.LENGTH_LONG);
                         locationManager.requestLocationUpdates(bestProvider, 1000, 0, MainAccount.this);
                     }
                 }
@@ -266,8 +289,8 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
         ImageButton buttonmiddle = (ImageButton) findViewById(R.id.button3);
         buttonmiddle.setMinimumWidth(screenWidth/3);
         buttonmiddle.setMinimumHeight(screenHeight/7);
-        buttonmiddle.setScaleY((float) 1.5);
-        buttonmiddle.setScaleX((float)1.1);
+        buttonmiddle.setScaleY((float) 1.63);
+        buttonmiddle.setScaleX((float)1.15);
 
         /** Ajustement du bouton en bas a droite **/
         ImageButton buttonright = (ImageButton) findViewById(R.id.button4);
@@ -277,11 +300,13 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
         buttonright.setScaleX((float)1.1);
 
         /** Ajuqtement de la photo de profil **/
-        //ImageView picture= (ImageView) findViewById(R.id.imageView2);
-        //picture.setMinimumWidth((int) (screenWidth/(2)));
-        //picture.setMinimumHeight((int)(screenHeight /(3)));
-       // picture.setScaleX(4);
-        //picture.setScaleY(4);
+        ImageView picture= (ImageView) findViewById(R.id.imageViewProfile);
+        picture.setMinimumWidth((int) (screenWidth/(2)));
+        picture.setMinimumHeight((int)(screenHeight /(3)));
+        picture.setScaleX(2);
+        picture.setScaleY(2);
+
+        /** A rendre plus joli **/
 
         TextView description= (TextView)findViewById(R.id.textViewDescription);
         description.setText(ci.getPrenom()+" "+ci.getNom()+" "+ci.getAge()+" ans, de "+ci.getVille());
@@ -340,18 +365,12 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
             }
         });
 
-        buttonEditProfile.setOnClickListener(new Button.OnClickListener(){
+        buttonmiddle.setOnClickListener(new Button.OnClickListener(){
 
             @Override
             public void onClick(View arg0) {
-                System.out.println("Je suis dans le intent");
 
-              /*  // TODO Auto-generated method stub
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 0);
-                System.out.println("intent lancé");
-                Toast.makeText(getApplicationContext(), "cliqué ", Toast.LENGTH_LONG).show();*/
+                Toast.makeText(getApplicationContext(), "Cette fonctionnalité n'est pas encore développée.", Toast.LENGTH_LONG).show();
 
             }});
 
@@ -365,7 +384,7 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
     {
         if(requestCode == PRODUCT_CHOICE)
         {
-        Toast.makeText(this, "dans le onActivityResult", Toast.LENGTH_LONG);
+        //Toast.makeText(this, "dans le onActivityResult", Toast.LENGTH_LONG);
         }
 
 
@@ -410,8 +429,12 @@ public class MainAccount extends AppCompatActivity implements LocationListener{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            double[] posClient= new double[2];
+            posClient[0]= latitude;
+            posClient[1]= longitude;
             Intent map = new Intent(getApplicationContext(), MapsActivity.class);
             map.putStringArrayListExtra("Com", proxCom);
+            map.putExtra("Cli", posClient);
             startActivity(map);
         }
         else

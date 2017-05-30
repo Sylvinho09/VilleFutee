@@ -22,7 +22,7 @@ class GetNotifs extends AsyncTask<LatitudeLongitude, Void, Vector<String>> {
     protected Vector<String> doInBackground(LatitudeLongitude... params) {
         Vector<String> notifs = new Vector<String>();
         try {
-            socket = new Socket("172.20.10.2", 8050);
+            socket = new Socket("172.24.12.189", 8050);
             out = new PrintWriter(socket.getOutputStream());
 
             is = new ObjectInputStream(socket.getInputStream());

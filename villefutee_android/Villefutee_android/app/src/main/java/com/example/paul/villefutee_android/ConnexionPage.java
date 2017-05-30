@@ -153,7 +153,7 @@ public class ConnexionPage extends AppCompatActivity {
                                                    if (result == 1 && client.isChecked()) {
                                                        Intent myintent = new Intent(getApplicationContext(), MainAccount.class);
 
-                                                       Toast.makeText(getApplicationContext(), "Ajout de log ok dans sharedpreferences.", Toast.LENGTH_LONG).show();
+                                                       //Toast.makeText(getApplicationContext(), "Ajout de log ok dans sharedpreferences.", Toast.LENGTH_LONG).show();
                                                        SharedPreferences.Editor editor = sharedPref.edit();
                                                        editor.putString("id".trim(), getId.trim());
                                                        editor.putInt("Log".trim(), 1);
@@ -163,7 +163,7 @@ public class ConnexionPage extends AppCompatActivity {
 
                                                    /** ici: activité commercant **/
                                                    else if(result==1 && commercant.isChecked()) {
-                                                       Toast.makeText(getApplicationContext(), "Ajout de log ok dans Shared Preferences."+result, Toast.LENGTH_LONG).show();
+                                                      // Toast.makeText(getApplicationContext(), "Ajout de log ok dans Shared Preferences."+result, Toast.LENGTH_LONG).show();
                                                       Intent myIntent = new Intent(getApplicationContext(), MainAccountCommercant.class);
                                                        SharedPreferences.Editor editor = sharedPref.edit();
                                                        editor.putString("id".trim(), getId.trim());

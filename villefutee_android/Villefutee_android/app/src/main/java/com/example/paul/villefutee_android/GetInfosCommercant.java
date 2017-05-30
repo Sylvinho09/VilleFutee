@@ -28,7 +28,7 @@ public class GetInfosCommercant extends AsyncTask<String, Void, CommercantInform
         PrintWriter out;
 
         try {
-            socket = new Socket("172.20.10.2", 8050);
+            socket = new Socket("172.24.12.189", 8050);
 
             out = new PrintWriter(socket.getOutputStream());
 
@@ -50,7 +50,7 @@ public class GetInfosCommercant extends AsyncTask<String, Void, CommercantInform
             ci.setVille((String)is.readObject());
             ci.setCategories((Vector<String>)is.readObject());
 
-            ci.setListe_reseaux((Hashtable<Integer, Vector<String>>) is.readObject());
+           // ci.setListe_reseaux((Hashtable<Integer, Vector<String>>) is.readObject());
             ci.setNotif_by_categ((Hashtable<String, Vector<Vector<String>>>) is.readObject());
 
             System.out.println("affichage commercant : " + ci.toString());

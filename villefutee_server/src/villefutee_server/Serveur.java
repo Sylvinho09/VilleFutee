@@ -36,6 +36,7 @@ public class Serveur {
         ServerSocket socketserver;
         Socket socketduserveur;
         SingletonConnectionForBDD ConnectionBDD=SingletonConnectionForBDD.getInstance();
+        String idClient="";
        
          String url = "jdbc:mysql://localhost:3306/dbVilleFutee?useSSL=false";
         
@@ -322,6 +323,7 @@ public class Serveur {
                     System.out.println("données recues: " + valueAsk.trim());
                     String[] datas = valueAsk.toString().trim().split("\\s+");
                     ClientInformations infosClient;
+                    idClient=datas[1].trim();
                     CommercantInformations infosCom;
                     if(datas[0].trim().equals("0"))
                     {
@@ -356,8 +358,8 @@ public class Serveur {
                     	   os.writeObject(infosClient.getCategories());
                     	   os.flush();
                     	   
-                    	   os.writeObject(infosClient.getListe_reseaux());
-                    	   os.flush();
+                    	   //os.writeObject(infosClient.getListe_reseaux());
+                    	   //os.flush();
                     	   os.writeObject(infosClient.getNotif_by_categ());
                     	   os.flush();
                     	   
@@ -393,9 +395,9 @@ public class Serveur {
                 	   os.flush();
                 	   System.out.println("Envoi des données"+infosCom.getCategories());
 
-                	   os.writeObject(infosCom.getListe_reseaux());
-                	   os.flush();
-                	   System.out.println("Envoi des donnéeslast"+infosCom.getListe_reseaux());
+                	  // os.writeObject(infosCom.getListe_reseaux());
+                	   //os.flush();
+                	   //System.out.println("Envoi des donnéeslast"+infosCom.getListe_reseaux());
 
                 	   os.writeObject(infosCom.getNotif_by_categ());
                 	   os.flush();
@@ -518,9 +520,153 @@ public class Serveur {
                 	
                 	
                 }
+                else if(extract.trim().equals("CreateRes".trim()))
+
+                {
+
+                	  System.out.println("message Client veut créer un réseau");
+
+                      char[] formbuffer = new char[210];
+
+
+
+                      FormulaireReseau form = new FormulaireReseau();
+
+
+
+                      /**
+
+                       * do while obligatoire sinon si on veut refaire une 2eme
+
+                       * inscription d'affilée, le read renvoie 1 je ne sais pas
+
+                       * pourquoi
+
+                       */
+
+                      
+
+                      int message_lengthCreate = 0;
+
+                      do {
+
+                          message_lengthCreate = in.read(formbuffer, 0, 210);
+
+                          System.out.println("ici");
+
+
+
+                      } while (message_lengthCreate == 1);
+
+                      System.out.println("valeur read " + message_lengthCreate);
+
+                      String valueForm = new String(formbuffer);
+
+
+
+                      System.out.println("données recues: " + valueForm.trim());
+
+
+
+                      // Obtient un tableau avec à chaque case une donnée saisie
+
+                      String[] datas = valueForm.toString().trim().split("\\s+");
+
+                      System.out.println("avant le try");
+
+
+
+    					/*System.out.println("affichage commercant ");
+
+    					for(int i=0; i< datas.length; i++)
+
+    					{
+
+    						System.out.println( datas[i]+ " ");
+
+    					}*/
+
+                      try
+
+                      {
+
+                    	
+
+                              System.out.println("dans le try");
+
+                              form.NomReseau = datas[0].trim();
+
+                              form.Categorie = datas[1].trim();
+
+                              form.typeReseau = datas[2].trim(); 
+
+                              form.ville = datas[3].trim();
+
+                              form.idUser = datas[4].trim();
+
+                               System.out.println("apres");
+
+
+
+                              // formbuffer.clear();
+
+                              System.out.println("données reçues :" + form.toString());
+
+
+
+                              int resultat=ConnectionBDD.ajoutReseau(form.NomReseau, form.Categorie, form.typeReseau, form.ville,idClient);
+
+                              os.writeObject(resultat); //ajoutClient retourne Ok ou Error;
+
+                              os.flush();
+
+
+
+                              // On ajoute maintenant ces données dans la base de
+
+                              // données
+
+                        
+
+                      } catch (ArrayIndexOutOfBoundsException e) {
+
+                          System.out.println("dans le catch");
+
+                          os.writeObject(-3);
+
+                          os.flush();
+
+                      }
+
+
+
                 
-            }
-           
+
+            } else if(extract.trim().equals("getReseaux".trim()))
+
+            {
+
+            	
+
+               Vector<String> h=ConnectionBDD.getReseaux(idClient);
+
+               System.out.println("Recuperation du vecteur" );
+
+                os.writeObject(h);
+
+        	   	 os.flush();
+
+        	   	System.out.println("Envoyer" );
+
+                }
+
+      
+
+                else System.out.println("Commande non reconnu");    
+
+        }
+
+      
             
 
         } catch (IOException e) {

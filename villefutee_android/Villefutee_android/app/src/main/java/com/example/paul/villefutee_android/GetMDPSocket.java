@@ -33,7 +33,7 @@ public class GetMDPSocket extends AsyncTask<IdMdpClass, Void, Integer> {
             //System.out.println("ici : "+InetAddress.getLocalHost() + "ici "+InetAddress.getLocalHost().getHostAddress());
             System.out.println("valeur: "+params[0].id+ " "+params[0].mdp);
 
-                socket = new Socket("172.20.10.2", 8050);
+                socket = new Socket("172.24.12.189", 8050);
             is = new ObjectInputStream(socket.getInputStream());
                 //StaticSocket.setSocket(socket2);
                 //socket = StaticSocket.getSocket();

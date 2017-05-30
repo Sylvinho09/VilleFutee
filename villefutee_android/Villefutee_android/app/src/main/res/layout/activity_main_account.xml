@@ -34,12 +34,13 @@
          <ImageButton
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             app:srcCompat="@mipmap/ic_launcher_mesproduits2"
+             app:srcCompat="@mipmap/edit_profile2"
              android:layout_alignTop="@+id/buttonnav"
              android:layout_centerHorizontal="true"
              android:background="@null"
              android:scaleType="fitXY"
              android:id="@+id/button3" />
+
 
          <ImageButton
              android:layout_width="wrap_content"
@@ -54,14 +55,14 @@
 
 
 
-         <Button
+       <!--  <Button
              android:id="@+id/button2"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:text="Éditer mon profil"
              android:layout_marginBottom="86dp"
              android:layout_above="@+id/button3"
-             android:layout_centerHorizontal="true" />
+             android:layout_centerHorizontal="true" />-->
 
          <TextView
              android:id="@+id/textViewDescription"
@@ -73,7 +74,8 @@
              android:layout_marginLeft="21dp"
              android:layout_marginStart="21dp"
              android:layout_marginTop="19dp"
-             android:text="TextView" />
+             android:text="TextView"
+             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
          <Button
              android:id="@+id/buttonDeconnexion"
@@ -88,24 +90,26 @@
              android:id="@+id/textViewInterest"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:layout_marginTop="95dp"
+             android:layout_marginTop="38dp"
              android:text="TextView"
+             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
              android:layout_below="@+id/textViewDescription"
              android:layout_alignLeft="@+id/textViewDescription"
              android:layout_alignStart="@+id/textViewDescription" />
 
-         <!--<ImageView
-             android:id="@+id/imageView2"
+         <ImageView
+             android:id="@+id/imageViewProfile"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:layout_above="@+id/button2"
+             app:srcCompat="@mipmap/profilepicture"
+             android:layout_marginBottom="32dp"
+             android:layout_above="@+id/buttonDeconnexion"
              android:layout_alignLeft="@+id/button3"
              android:layout_alignStart="@+id/button3"
-             android:layout_marginBottom="83dp"
-             android:scaleType="fitXY"
-             android:scaleX="4"
-             android:scaleY="4"
-             app:srcCompat="@mipmap/profilepicture" />-->
+             android:layout_alignRight="@+id/button3"
+             android:layout_alignEnd="@+id/button3"/>
+
+
 
          <!-- scaleType important sinon ne remplit pas tout l'espace qui lui st disponible -->
 

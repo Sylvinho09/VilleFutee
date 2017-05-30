@@ -24,7 +24,7 @@ class SendNotifications extends AsyncTask<Vector<String>, Void, Integer> {
 
         try {
 
-            socket = new Socket("172.20.10.2", 8050);
+            socket = new Socket("172.24.12.189", 8050);
             is = new ObjectInputStream(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream());
             out.println(new String("SendNotifs").trim()); //On envoie ça au serveur pour qu'il sache ce qu'on veut

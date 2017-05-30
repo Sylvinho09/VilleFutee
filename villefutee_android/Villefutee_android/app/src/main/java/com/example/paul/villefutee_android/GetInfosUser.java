@@ -32,7 +32,7 @@ public class GetInfosUser extends AsyncTask<String, Void, ClientInformations> {
 
 
         try {
-            socket = new Socket("172.20.10.2", 8050);
+            socket = new Socket("172.24.12.189", 8050);
 
             out = new PrintWriter(socket.getOutputStream());
 
@@ -57,7 +57,7 @@ public class GetInfosUser extends AsyncTask<String, Void, ClientInformations> {
 
 
             ci.setCategories((Vector<String>)is.readObject());
-            ci.setListe_reseaux((Hashtable<Integer, Vector<String>>) is.readObject());
+           // ci.setListe_reseaux((Hashtable<Integer, Vector<String>>) is.readObject());
             ci.setNotif_by_categ((Hashtable<String, Vector<Vector<String>>>) is.readObject());
 
             System.out.println("affichage user: " + ci.toString());

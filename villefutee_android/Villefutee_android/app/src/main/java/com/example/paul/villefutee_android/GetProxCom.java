@@ -22,7 +22,7 @@ public class GetProxCom extends AsyncTask<LatitudeLongitude, Void, ArrayList<Str
     protected ArrayList<String> doInBackground(LatitudeLongitude... params) {
 
         try {
-            socket = new Socket("172.20.10.2", 8050);
+            socket = new Socket("172.24.12.189", 8050);
             out= new PrintWriter(socket.getOutputStream());
 
             is=new ObjectInputStream(socket.getInputStream());

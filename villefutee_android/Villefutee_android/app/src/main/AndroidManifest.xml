@@ -67,6 +67,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".MainAccountCommercant"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".addReseau"></activity>
+        <activity android:name=".MesReseaux"></activity>
     </application>
 
 </manifest>

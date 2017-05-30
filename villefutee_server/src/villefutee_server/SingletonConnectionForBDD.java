@@ -276,88 +276,9 @@ public class SingletonConnectionForBDD {
 		return 1;
 	}
 
-	/**
-	 * 
-	 * @param nomReseaux
-	 * @param Description
-	 * @param Ville
-	 * @param PolitiqueJoin
-	 * @param idUtilisateurChef
-	 * @return 1 si le reseaux � �t� ajouter 0,si une erreur,-1 si erreur
-	 *         Attribut PolitiqueJoin,-2 Si
-	 *         MySQLIntegrityConstraintViolationException,-3 si SQLException
-	 */
-	public int AddReseaux(String nomReseaux, String Description, String Ville, String PolitiqueJoin,
-			String idUtilisateurChef, Vector<String> Categorie) {
-		if (PolitiqueJoin.equals("all") || PolitiqueJoin.equals("ask") || PolitiqueJoin.equals("invit_only")) {
-			try {
-				Statement statement = connexion.createStatement();
-				/* Ex�cution d'une requ�te de lecture */
+	
 
-				if ((statement
-						.executeUpdate(
-								"INSERT INTO Reseau (Nom_reseaux, Description, Ville, Politique_join,Utilisateur_chef)"
-										+ "VALUES ('" + nomReseaux + "','" + Description + "','" + Ville + "','"
-										+ PolitiqueJoin + "','" + idUtilisateurChef + "');",
-								Statement.RETURN_GENERATED_KEYS)) == 0) {
-					return 0;
-				}
-				ResultSet Rstest = statement.getGeneratedKeys();
-				int idReseau = 0;
-				while (Rstest.next()) {
-					idReseau = Rstest.getInt("GENERATED_KEY");
-					System.out.println("IdReseau " + idReseau);
-				}
-				if ((statement
-						.executeUpdate("INSERT INTO Utilisateur_has_Reseau (Utilisateur_identifiant, Reseau_IdReseau)"
-								+ "VALUES ('" + idUtilisateurChef + "','" + idReseau + "');")) == 0) {
-					return 0;
-				}
-
-				for (String Cat : Categorie) {
-					if ((statement.executeUpdate("INSERT INTO Reseau_has_Categorie (Reseau_IdReseau, categorie_name)"
-							+ "VALUES ('" + idReseau + "','" + Cat + "');")) == 0) {
-						return 0;
-					}
-				}
-			} catch (MySQLIntegrityConstraintViolationException e) {
-				System.out.println("je suis ici");
-				e.printStackTrace();
-				return -2;
-			} catch (SQLException e) {
-				e.printStackTrace();
-				System.out.println("erreur sql " + e);
-				return -3;
-
-				/* G�rer les �ventuelles erreurs ici */
-			}
-			return 1;
-		} else
-			return 0;
-	}
-
-	public int AjoutUtilisateurReseau(String idUtilisateur, int idReseau) {
-		try {
-			Statement statement = connexion.createStatement();
-			/* Ex�cution d'une requ�te de lecture */
-
-			if ((statement.executeUpdate("INSERT INTO Utilisateur_has_Reseau (Utilisateur_identifiant, Reseau_IdReseau)"
-					+ "VALUES ('" + idUtilisateur + "','" + idReseau + "');")) == 0) {
-				return 0;
-			}
-			return 1;
-		} catch (MySQLIntegrityConstraintViolationException e) {
-			System.out.println("je suis ici");
-			e.printStackTrace();
-			return -2;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("erreur sql " + e);
-			return -3;
-			/* G�rer les �ventuelles erreurs ici */
-		}
-	}
-
+	
 	/*******
 	 * 
 	 * 
@@ -440,18 +361,18 @@ public class SingletonConnectionForBDD {
 				}
 				clientInf.setCategories(categ);
 
-				Hashtable<Integer, Vector<String>> reseaux_list = new Hashtable<Integer, Vector<String>>();
+				/*Hashtable<Integer, Vector<String>> reseaux_list = new Hashtable<Integer, Vector<String>>();
 				// Vector<Vector<String>> reseaux = new
 				// Vector<Vector<String>>();
 
 				resultat = statement.executeQuery(
 						"SELECT Reseau_idReseau FROM Utilisateur_has_Reseau where Utilisateur_identifiant='"
-								+ identifiant + "';");
+								+ identifiant + "';");*/
 
 				/*
 				 * R�cup�ration des donn�es du r�sultat de la requ�te de lecture
 				 */
-				while (resultat.next()) {
+				/*while (resultat.next()) {
 					Vector<String> reseau = new Vector<String>();
 					ResultSet resultat2 = statement2.executeQuery(
 							"SELECT idReseau, Nom_Reseaux, Description, Ville, Politique_join FROM Reseau WHERE idReseau='"
@@ -468,7 +389,7 @@ public class SingletonConnectionForBDD {
 					reseaux_list.put(idReseau, reseau);
 				}
 
-				clientInf.setListe_reseaux(reseaux_list);
+				clientInf.setListe_reseaux(reseaux_list);*/
 
 				Hashtable<String, Vector<Vector<String>>> notif_by_categ = new Hashtable<String, Vector<Vector<String>>>();
 				Vector<Vector<String>> oneCategNotif = new Vector<Vector<String>>();
@@ -567,18 +488,18 @@ public class SingletonConnectionForBDD {
 
 				}
 				
-				Hashtable<Integer, Vector<String>> reseaux_list = new Hashtable<Integer, Vector<String>>();
+				/*Hashtable<Integer, Vector<String>> reseaux_list = new Hashtable<Integer, Vector<String>>();
 				// Vector<Vector<String>> reseaux = new
 				// Vector<Vector<String>>();
 
 				resultat = statement.executeQuery(
 						"SELECT Reseau_idReseau FROM Utilisateur_has_Reseau where Utilisateur_identifiant='"
 								+ identifiant + "';");
-
+*/
 				/*
 				 * R�cup�ration des donn�es du r�sultat de la requ�te de lecture
 				 */
-				while (resultat.next()) {
+				/*while (resultat.next()) {
 					Vector<String> reseau = new Vector<String>();
 					ResultSet resultat2 = statement2.executeQuery(
 							"SELECT idReseau, Nom_Reseaux, Description, Ville, Politique_join FROM Reseau WHERE idReseau='"
@@ -594,7 +515,7 @@ public class SingletonConnectionForBDD {
 
 					reseaux_list.put(idReseau, reseau);
 				}
-				comInf.setListe_reseaux(reseaux_list);
+				comInf.setListe_reseaux(reseaux_list);*/
 				
 				/******* On récupère maintenant les notifications envoyées par le commercant ********/
 				
@@ -673,10 +594,10 @@ public class SingletonConnectionForBDD {
 	public ArrayList<String> getNearestComs(double latitude, double longitude) {
 		try {
 			ArrayList<String> coms= new ArrayList<String>();
-			double latMin= latitude-1;
-			double latMax= latitude+1;
-			double longMin= longitude-1;
-			double longMax= longitude+1;
+			double latMin= latitude-0.5;
+			double latMax= latitude+0.5;
+			double longMin= longitude-0.5;
+			double longMax= longitude+0.5;
 
 			Statement statement = connexion.createStatement();
 			Statement statement2 = connexion.createStatement();
@@ -748,10 +669,10 @@ public class SingletonConnectionForBDD {
 
 	public Vector<String> getNotifs(String id, double latitude, double longitude) {
 		Vector<String> notifs = new Vector<String>();
-		double latMin= latitude-1;
-		double latMax= latitude+1;
-		double longMin= longitude-1;
-		double longMax= longitude+1;
+		double latMin= latitude-0.5;
+		double latMax= latitude+0.5;
+		double longMin= longitude-0.5;
+		double longMax= longitude+0.5;
 		
 		try {
 			Statement statement = connexion.createStatement();
@@ -810,5 +731,169 @@ public class SingletonConnectionForBDD {
 		
 		return null;
 	}
+	
+	public int ajoutReseau(String nomReseau, String categorie, String typeReseau, String ville,String idUser) {
+
+        try {
+
+            Statement statement = connexion.createStatement();
+
+            if ((statement
+
+                    .executeUpdate(
+
+                            "INSERT INTO Reseau (Nom_reseaux, Description, Ville, Politique_join,categorie_name)"
+
+                                    + "VALUES ('" + nomReseau + "','" + "Sans description" + "','" + ville + "','"
+
+                                    + typeReseau + "','"+categorie+"');",
+
+                            Statement.RETURN_GENERATED_KEYS)) == 0) {
+
+                return 0;
+
+            }
+
+            System.out.println("Le reseazu a été ajouté a la bdd");
+
+            ResultSet Rstest = statement.getGeneratedKeys();
+
+            int idReseau = 0;
+
+            
+
+            while (Rstest.next()) {
+
+                idReseau = Rstest.getInt("GENERATED_KEY");
+
+                System.out.println("IdReseau " + idReseau);
+
+            }
+
+            System.out.println("IdUser "+idUser);
+
+             if(AjoutUtilisateurReseau( idUser, idReseau)!= 1) {
+
+                 return 0;
+
+             }
+
+             return 1;
+
+        } catch (MySQLIntegrityConstraintViolationException e) {
+
+            System.out.println("je suis ici");
+
+            e.printStackTrace();
+
+            return -2;
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+            System.out.println("erreur sql " + e);
+
+            return -3;
+
+        }
+
+    } 
+
+    public int AjoutUtilisateurReseau(String idUtilisateur, int idReseau) {
+
+        try {
+
+            Statement statement = connexion.createStatement();
+
+            /* Ex�cution d'une requ�te de lecture */
+
+            if ((statement.executeUpdate("INSERT INTO Utilisateur_has_Reseau (Utilisateur_identifiant, Reseau_IdReseau)"
+
+                    + "VALUES ('" + idUtilisateur + "','" + idReseau + "');")) == 0) {
+
+                return 0;
+
+            }
+
+            return 1;
+
+        } catch (MySQLIntegrityConstraintViolationException e) {
+
+            System.out.println("je suis ici");
+
+            e.printStackTrace();
+
+            return -2;
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+            System.out.println("erreur sql " + e);
+
+            return -3;
+
+            /* G�rer les �ventuelles erreurs ici */
+
+        }
+
+    }
+
+    
+
+    public Vector<String> getReseaux(String idUtilisateur) {
+
+        try {
+
+            Statement statement = connexion.createStatement();
+
+            /* Ex�cution d'une requ�te de lecture */
+
+            ResultSet resultat = statement.executeQuery("Select idReseau,Nom_Reseaux,Description,Politique_join FROM Reseau, utilisateur_has_reseau "
+
+                    + "WHERE idReseau= Reseau_idReseau AND Utilisateur_identifiant='"+idUtilisateur+"';");
+
+            Vector<String> vec= new Vector<String>();
+
+            while(resultat.next())
+
+            {
+
+                String str=" ";
+
+                str+=resultat.getInt("idReseau") +" "+resultat.getString("Nom_Reseaux")+" "+resultat.getString("Description")+" "+resultat.getString("Politique_join");
+
+                System.out.println(str);
+
+                vec.add(str);
+
+            }
+
+            return vec;
+
+            
+
+        } catch (MySQLIntegrityConstraintViolationException e) {
+
+            System.out.println("je suis ici");
+
+            e.printStackTrace();
+
+            return null;
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+            System.out.println("erreur sql " + e);
+
+            return null;
+
+            /* G�rer les �ventuelles erreurs ici */
+
+        }
+
+    }
 
 }

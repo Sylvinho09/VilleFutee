@@ -14,17 +14,23 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ArrayList<String> proxCom;
+    private double[] posClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         proxCom=new ArrayList<String>();
         proxCom=getIntent().getStringArrayListExtra("Com");
+        posClient= new double[2];
+        posClient=getIntent().getDoubleArrayExtra("Cli");
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -64,6 +70,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(Magasin1).title("MagasinEnDur").snippet("Hello"));
 
 
+        /**Affichage la position de l'utilisateur **/
+
+        LatLng utilisateur= new LatLng(posClient[0], posClient[1]);
+        mMap.moveCamera((CameraUpdateFactory.newLatLngZoom(utilisateur, 8.0f)));
+        mMap.addMarker(new MarkerOptions().position(utilisateur).title("Vous").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+
+
         /**Magasins récupérés du serveur **/
         int i=0;
 
@@ -73,11 +87,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String infosMag = proxCom.get(i+1)+", "+proxCom.get(i+2);
             LatLng magasin= new LatLng(Double.parseDouble(proxCom.get(i+3)), Double.parseDouble(proxCom.get(i+4)));
             //On met le focus sur le premier magasin proche
-            if(i==0) {
+           /* if(i==0) {
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Magasin1, 8.0f));
 
-            }
+            }*/
             i+=5;
             mMap.addMarker(new MarkerOptions().position(magasin).title(nomMag).snippet(infosMag));
         }
